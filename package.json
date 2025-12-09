@@ -11,5 +11,8 @@
   "devDependencies": {
     "typescript": "~5.9.3",
     "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "dkfds": "^11.1.0"
   }
 }
