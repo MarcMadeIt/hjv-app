@@ -3,6 +3,7 @@ import { setupCounter } from "./counter.ts";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   <div>
+<<<<<<< Updated upstream
  <div class="row card-row">
     <div class="col-12 col-sm-8 col-md-6">
         <section class="card">
@@ -22,6 +23,9 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
         </section>
     </div>
 </div>
+=======
+ hejjjjj
+>>>>>>> Stashed changes
   </div>
 `;
 
