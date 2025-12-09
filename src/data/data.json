@@ -1,0 +1,343 @@
+{
+  "scenarioId": "nymindegab-training-01",
+  "title": "Nymindegab Land & Sea Exercise",
+  "description": "Combined land and sea training scenario around Nymindegab camp and nearby waters.",
+  "type": "land_sea",
+  "createdBy": "Gamemaster",
+  "createdAt": "2025-12-09T14:30:00Z",
+
+  "map": {
+    "center": {
+      "lat": 55.742,
+      "lng": 8.253
+    },
+    "zoom": 13,
+    "markers": [
+      {
+        "markerId": "m1",
+        "taskId": 1,
+        "lat": 55.7398,
+        "lng": 8.2501,
+        "radius": 20,
+        "environment": "land"
+      },
+      {
+        "markerId": "m2",
+        "taskId": 2,
+        "lat": 55.7405,
+        "lng": 8.252,
+        "radius": 30,
+        "environment": "land"
+      },
+      {
+        "markerId": "m3",
+        "taskId": 3,
+        "lat": 55.7412,
+        "lng": 8.2498,
+        "radius": 25,
+        "environment": "land"
+      },
+      {
+        "markerId": "m4",
+        "taskId": 4,
+        "lat": 55.748,
+        "lng": 8.248,
+        "radius": 15,
+        "environment": "land"
+      },
+      {
+        "markerId": "m5",
+        "taskId": 5,
+        "lat": 55.7395,
+        "lng": 8.2512,
+        "radius": 10,
+        "environment": "land"
+      },
+      {
+        "markerId": "m6",
+        "taskId": 6,
+        "lat": 55.742,
+        "lng": 8.253,
+        "radius": 50,
+        "environment": "land"
+      },
+      {
+        "markerId": "m7",
+        "taskId": 7,
+        "lat": 55.742,
+        "lng": 8.253,
+        "radius": 10,
+        "environment": "land"
+      },
+      {
+        "markerId": "m8",
+        "taskId": 8,
+        "lat": 56.1541,
+        "lng": 8.5681,
+        "radius": 100,
+        "environment": "sea"
+      },
+      {
+        "markerId": "m9",
+        "taskId": 9,
+        "lat": 56.2,
+        "lng": 8.6,
+        "radius": 500,
+        "environment": "sea"
+      },
+      {
+        "markerId": "m10",
+        "taskId": 10,
+        "lat": 56.21,
+        "lng": 8.62,
+        "radius": 75,
+        "environment": "sea"
+      },
+      {
+        "markerId": "m11",
+        "taskId": 11,
+        "lat": 56.212,
+        "lng": 8.63,
+        "radius": 30,
+        "environment": "sea"
+      },
+      {
+        "markerId": "m12",
+        "taskId": 12,
+        "lat": 56.215,
+        "lng": 8.64,
+        "radius": 40,
+        "environment": "sea"
+      },
+      {
+        "markerId": "m13",
+        "taskId": 13,
+        "lat": 56.218,
+        "lng": 8.65,
+        "radius": 60,
+        "environment": "sea"
+      },
+      {
+        "markerId": "m14",
+        "taskId": 14,
+        "lat": 56.1541,
+        "lng": 8.5681,
+        "radius": 100,
+        "environment": "sea"
+      }
+    ]
+  },
+
+  "tasks": [
+    {
+      "taskId": 1,
+      "title": "Velkomst",
+      "description": "Start ved hovedindgangen til Nymindegablejren.",
+      "environment": "land",
+      "locationName": "Nymindegab, Hovedport",
+      "difficulty": "Let",
+      "activationCondition": "Lokalitet",
+      "options": ["Start", "Læs historie først"],
+      "geo": {
+        "lat": 55.7398,
+        "lng": 8.2501,
+        "radius": 20
+      }
+    },
+    {
+      "taskId": 2,
+      "title": "Gamle forsvarsstilling",
+      "description": "Find hvilken type anlæg der tidligere lå her.",
+      "environment": "land",
+      "locationName": "Nymindegablejr",
+      "difficulty": "Svær",
+      "activationCondition": "Zone",
+      "options": ["Kanonstilling", "Ammunitionsdepot", "Lyttepost"],
+      "geo": {
+        "lat": 55.7405,
+        "lng": 8.252,
+        "radius": 30
+      }
+    },
+    {
+      "taskId": 3,
+      "title": "Observation",
+      "description": "Hvad kan du se fra udkigspunktet?",
+      "environment": "land",
+      "locationName": "Udkigspunktet",
+      "difficulty": "Øvet",
+      "activationCondition": "Lokalitet",
+      "options": ["Indtrængningsrute", "Skjult område", "Ingen aktivitet"],
+      "geo": {
+        "lat": 55.7412,
+        "lng": 8.2498,
+        "radius": 25
+      }
+    },
+    {
+      "taskId": 4,
+      "title": "Mistænkelig aktivitet",
+      "description": "Undersøg området ved Bygning B.",
+      "environment": "land",
+      "locationName": "BYG B",
+      "difficulty": "Let",
+      "activationCondition": "Lokalitet",
+      "options": ["Undersøg døren", "Tjek spor", "Afgiv melding"],
+      "geo": {
+        "lat": 55.748,
+        "lng": 8.248,
+        "radius": 15
+      }
+    },
+    {
+      "taskId": 5,
+      "title": "Historisk punkt",
+      "description": "Læs skiltet og svar på et spørgsmål.",
+      "environment": "land",
+      "locationName": "Historisk Punkt",
+      "difficulty": "Svær",
+      "activationCondition": "Lokalitet",
+      "options": ["Årstal", "Placeringens formål"],
+      "geo": {
+        "lat": 55.7395,
+        "lng": 8.2512,
+        "radius": 10
+      }
+    },
+    {
+      "taskId": 6,
+      "title": "Gennemsøg område",
+      "description": "Markér området som gennemsøgt.",
+      "environment": "land",
+      "locationName": "Markeret område",
+      "difficulty": "Øvet",
+      "activationCondition": "Zone",
+      "options": ["Sikkert", "Fundet genstand"],
+      "geo": {
+        "lat": 55.742,
+        "lng": 8.253,
+        "radius": 50
+      }
+    },
+    {
+      "taskId": 7,
+      "title": "Fund beslutning",
+      "description": "Du har fundet en genstand. Hvad gør du?",
+      "environment": "land",
+      "locationName": "Markeret område",
+      "difficulty": "Let",
+      "activationCondition": "Afhængighed",
+      "options": ["Afspær", "Indberet", "Undersøg"],
+      "geo": {
+        "lat": 55.742,
+        "lng": 8.253,
+        "radius": 10
+      }
+    },
+    {
+      "taskId": 8,
+      "title": "Start rute fra havn",
+      "description": "Sæt kurs mod første waypoint.",
+      "environment": "sea",
+      "locationName": "Havnebassin",
+      "difficulty": "Svær",
+      "activationCondition": "Rute start",
+      "options": ["Kurs WP1", "Sikkerhedstjek"],
+      "geo": {
+        "lat": 56.1541,
+        "lng": 8.5681,
+        "radius": 100
+      }
+    },
+    {
+      "taskId": 9,
+      "title": "Nødsignal mod nord",
+      "description": "Modtag nødsignal og reager.",
+      "environment": "sea",
+      "locationName": "Åben vand",
+      "difficulty": "Øvet",
+      "activationCondition": "Signal",
+      "options": ["Sejl mod signal", "Ignorer"],
+      "geo": {
+        "lat": 56.2,
+        "lng": 8.6,
+        "radius": 500
+      }
+    },
+    {
+      "taskId": 10,
+      "title": "Sigtet observation",
+      "description": "Hvad observeres i søgeområdet?",
+      "environment": "sea",
+      "locationName": "Åben vand",
+      "difficulty": "Let",
+      "activationCondition": "Radius",
+      "options": ["Flåde", "Person i vandet", "Intet tegn"],
+      "geo": {
+        "lat": 56.21,
+        "lng": 8.62,
+        "radius": 75
+      }
+    },
+    {
+      "taskId": 11,
+      "title": "Mand over bord",
+      "description": "Marker og håndter muligt menneske i vandet.",
+      "environment": "sea",
+      "locationName": "Åben vand",
+      "difficulty": "Svær",
+      "activationCondition": "Lokalitet",
+      "options": ["Optagning", "Assistance", "Markér position"],
+      "geo": {
+        "lat": 56.212,
+        "lng": 8.63,
+        "radius": 30
+      }
+    },
+    {
+      "taskId": 12,
+      "title": "Boarding kontrol",
+      "description": "Nær et fartøj der skal kontrolleres.",
+      "environment": "sea",
+      "locationName": "Åben vand",
+      "difficulty": "Øvet",
+      "activationCondition": "Zone",
+      "options": ["Radiokontakt", "Boarding", "Afvent"],
+      "geo": {
+        "lat": 56.215,
+        "lng": 8.64,
+        "radius": 40
+      }
+    },
+    {
+      "taskId": 13,
+      "title": "Undvig objekt",
+      "description": "Reager på muligt minelignende objekt.",
+      "environment": "sea",
+      "locationName": "Åben vand",
+      "difficulty": "Let",
+      "activationCondition": "Radius",
+      "options": ["Ændr kurs", "Vurdér igen", "Stop maskine"],
+      "geo": {
+        "lat": 56.218,
+        "lng": 8.65,
+        "radius": 60
+      }
+    },
+    {
+      "taskId": 14,
+      "title": "Tilbage til havn",
+      "description": "Afslut missionen og returnér.",
+      "environment": "sea",
+      "locationName": "Åben vand",
+      "difficulty": "Svær",
+      "activationCondition": "Rute slut",
+      "options": ["Afslut", "Debrief"],
+      "geo": {
+        "lat": 56.1541,
+        "lng": 8.5681,
+        "radius": 100
+      }
+    }
+  ]
+}
