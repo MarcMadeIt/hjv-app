@@ -1,4 +1,4 @@
-export function renderTaskList(host: HTMLDivElement): void {
+export function renderHeader(host: HTMLDivElement): void {
   host.innerHTML = `
     <div id="header">
         <div id="header-left"><img src="/public/logo.png" alt="Hjemmeværnet's logo"></div>

@@ -1,9 +1,6 @@
 export function renderTaskList(host: HTMLDivElement): void {
   host.innerHTML = `
 
-  <div class="">
-         
-  </div>
-
+  
 `;
 }
