@@ -3,20 +3,22 @@ import { renderContent } from "./components/content/content";
 import { renderCreateScenario } from "./components/createScenario/createScenario";
 import { renderHeader } from "./components/header/header";
 import { renderMap } from "./components/map/map";
+import { renderNavTab } from "./components/navTab/navTab";
 import "../node_modules/dkfds/dist/css/dkfds.css";
 
 const appRoot = document.querySelector<HTMLDivElement>("#app");
 
 if (appRoot) {
   appRoot.innerHTML = `
-  <div>
+  <main>
     <header id="header"></header>
     <div id="container">
       <div id="content"></div>
       <div id="map-frame"></div>
     </div>
-  </div>
-  <div id="createScenario"></div>
+    <div id="createScenario"></div>
+    <div id="nav-tab"></div>
+  </main>
 `;
 
   const header = appRoot.querySelector<HTMLDivElement>("#header");
@@ -24,6 +26,7 @@ if (appRoot) {
   const map = appRoot.querySelector<HTMLDivElement>("#map-frame");
   const createScenario =
     appRoot.querySelector<HTMLDivElement>("#createScenario");
+  const navTab = appRoot.querySelector<HTMLDivElement>("#nav-tab");
 
   if (header) {
     renderHeader(header);
@@ -36,5 +39,8 @@ if (appRoot) {
   }
   if (createScenario) {
     renderCreateScenario(createScenario);
+  }
+  if (navTab) {
+    renderNavTab(navTab, { contentHost: content, mapHost: map });
   }
 }

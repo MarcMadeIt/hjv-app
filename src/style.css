@@ -1,8 +1,6 @@
 :root {
   font-family: Verdana, system-ui, -apple-system, "Segoe UI", sans-serif;
-  ;
-  line-height: 1.5;
-  font-weight: 400;
+
 
   --color-primary: #7e1431;
   --color-secondary: #38524f;
@@ -17,6 +15,9 @@
   --color-border: #d3d7d6;
   --color-text: #000000;
   --color-text-2: #fff;
+
+  --color-tertiary-darkblue-low: #00254a97;
+
   --color-muted: #6b7472;
 
   --radius-sm: 3px;
@@ -33,8 +34,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  max-width: 1700px;
+  margin: 0 auto;
+}
+
 .button-primary {
   background-color: var(--color-secondary) !important;
+  flex: block;
 }
 
 .button-secondary {
@@ -42,16 +55,6 @@
   color: var(--color-text-2) !important;
 }
 
-
-
-
-
-body {
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-
-}
 
 #listTasks {
   padding: 15px;
@@ -67,10 +70,35 @@ body {
 #content {
   flex: 3;
   padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
 
 }
 
 #map-frame {
   flex: 4;
 
+}
+
+@media (max-width: 768px) {
+  main {
+    padding-bottom: 120px;
+  }
+
+  #content {
+    flex: 0;
+
+  }
+
+  #container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #content,
+  #map-frame {
+    width: 100%;
+  }
 }
