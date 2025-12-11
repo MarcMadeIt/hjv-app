@@ -1,10 +1,11 @@
+import "./map.css";
 import { importLibrary, setOptions } from "@googlemaps/js-api-loader";
 
 let optionsInitialized = false;
 
 export async function renderMap(host: HTMLDivElement): Promise<void> {
   host.innerHTML = `
-    <div id="map" style="width: 100%; height: 400px;"></div>
+    <div id="map"></div>
   `;
 
   const mapHost = host.querySelector<HTMLDivElement>("#map");
