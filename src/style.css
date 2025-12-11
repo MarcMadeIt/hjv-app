@@ -1,5 +1,6 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Verdana, system-ui, -apple-system, "Segoe UI", sans-serif;
+  ;
   line-height: 1.5;
   font-weight: 400;
 
@@ -15,6 +16,7 @@
   --color-bg: #E6E8E8;
   --color-border: #d3d7d6;
   --color-text: #000000;
+  --color-text-2: #fff;
   --color-muted: #6b7472;
 
   --radius-sm: 3px;
@@ -37,6 +39,7 @@
 
 .button-secondary {
   background-color: var(--color-tertiary-green) !important;
+  color: var(--color-text-2) !important;
 }
 
 
