@@ -1,8 +1,8 @@
 import "./style.css";
-import { renderContent } from "./components/content";
-import { renderCreateScenario } from "./components/createScenario";
-import { renderHeader } from "./components/header";
-import { renderMap } from "./components/map";
+import { renderContent } from "./components/content/content";
+import { renderCreateScenario } from "./components/createScenario/createScenario";
+import { renderHeader } from "./components/header/header";
+import { renderMap } from "./components/map/map";
 import "../node_modules/dkfds/dist/css/dkfds.css";
 
 const appRoot = document.querySelector<HTMLDivElement>("#app");
