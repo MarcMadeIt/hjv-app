@@ -10,8 +10,10 @@ if (appRoot) {
   appRoot.innerHTML = `
   <div>
     <header id="header"></header>
+    <div id="container">
     <div id="listTasks"></div>
     <div id="map"></div>
+    </div>
   </div>
 `;
 
