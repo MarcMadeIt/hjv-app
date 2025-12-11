@@ -13,6 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
 #listTasks {
   padding: 15px;
 }
@@ -40,4 +46,19 @@
 #header-left img {
   width: 199.1px;
   height: 60.1;
+}
+
+#container {
+  display: flex;
+
+}
+
+#content {
+  flex: 1;
+
+}
+
+#map {
+  flex: 2;
+  height: 100vh;
 }

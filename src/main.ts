@@ -1,5 +1,6 @@
 import "./style.css";
-import { renderTaskList } from "./components/taskList";
+import { renderContent } from "./components/content";
+import { renderCreateScenario } from "./components/createScenario";
 import { renderHeader } from "./components/header";
 import { renderMap } from "./components/map";
 import "../node_modules/dkfds/dist/css/dkfds.css";
@@ -11,23 +12,29 @@ if (appRoot) {
   <div>
     <header id="header"></header>
     <div id="container">
-    <div id="listTasks"></div>
-    <div id="map"></div>
+      <div id="content"></div>
+      <div id="map-frame"></div>
     </div>
   </div>
+  <div id="createScenario"></div>
 `;
 
   const header = appRoot.querySelector<HTMLDivElement>("#header");
-  const listHost = appRoot.querySelector<HTMLDivElement>("#listTasks");
-  const map = appRoot.querySelector<HTMLDivElement>("#map");
+  const content = appRoot.querySelector<HTMLDivElement>("#content");
+  const map = appRoot.querySelector<HTMLDivElement>("#map-frame");
+  const createScenario =
+    appRoot.querySelector<HTMLDivElement>("#createScenario");
 
   if (header) {
     renderHeader(header);
   }
-  if (listHost) {
-    renderTaskList(listHost);
+  if (content) {
+    renderContent(content);
   }
   if (map) {
     renderMap(map);
+  }
+  if (createScenario) {
+    renderCreateScenario(createScenario);
   }
 }
