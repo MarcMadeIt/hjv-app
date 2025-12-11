@@ -3,12 +3,12 @@ import "./createScenario.css";
 export function renderCreateScenario(host: HTMLDivElement): void {
   host.innerHTML = `
 <form id="form" action="">  
-   <!-- Opgaver - radiobutton -->
+   <!-- Opgaver - rolldown -->
     <div class="form-group">
-    <label class="form-label" for="options">Region</label>
+    <label class="form-label" for="options">Vælg mellem opgaver</label>
 
     <select class="form-select" name="options" id="options" required>
-        <option value="">Vælg region</option>
+        <option value="">Opgaver</option>
         <option value="option1">Hovedstaden</option>
         <option value="option2">Midtjylland</option>
         <option value="option3">Nordjylland</option>
@@ -19,7 +19,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
 
      <!-- Name - input -->
   <div class="form-group">
-    <label class="form-label" for="input-text">Inputfelt med label</label>
+    <label class="form-label" for="input-text">Navn</label>
     <input type="text" id="input-text" name="input-text" class="form-input" required>
   </div>
 
@@ -27,39 +27,43 @@ export function renderCreateScenario(host: HTMLDivElement): void {
   <div class="form-group">
     <fieldset aria-labelledby="radio-example-legend">
 
-        <legend class="form-label" id="radio-example-legend">Radioknapper</legend>
+        <legend class="form-label" id="radio-example-legend">Vælg type</legend>
 
-        <div class="form-group-radio">
-            <input type="radio" id="radiogroup-option1" name="radio-example"
-                class="form-radio" value="v1">
-            <label class="form-label" for="radiogroup-option1">Valg 1</label>
+        <div id="radio-options">
+            <div class="form-group-radio">
+                <input type="radio" id="radiogroup-option1" name="radio-example"
+                    class="form-radio" value="v1">
+                <label class="form-label" for="radiogroup-option1">Land</label>
+            </div>
 
+            <div class="form-group-radio">
+                <input type="radio" id="radiogroup-option2" name="radio-example"
+                    class="form-radio" value="v2">
+                <label class="form-label" for="radiogroup-option2">Sø</label>
+            </div>
         </div>
 
-        <div class="form-group-radio">
-            <input type="radio" id="radiogroup-option2" name="radio-example"
-                class="form-radio" value="v2">
-            <label class="form-label" for="radiogroup-option2">Valg 2</label>
-
-        </div>
     </fieldset>
   </div>
   
   <!-- Status - buttons -->
-    <div class="mb-7">
+
+      <div>
+          <button class="button button-tertiary">
+              Vælg lokation fra kortet
+          </button>
+      </div>
+    <div id="mb-opdateret-nulstil">
+      <div class="mb-7">
         <button class="button button-primary">
-            Primærknap
+            Lokation Opdateret
         </button>
-    </div>
-    <div class="mb-7">
-        <button class="button button-secondary">
-            Sekundærknap
-        </button>
-    </div>
-    <div>
-        <button class="button button-tertiary">
-            Tertiærknap
-        </button>
+      </div>
+      <div class="mb-7">
+          <button class="button button-secondary">
+              Nulstil
+          </button>
+      </div>
     </div>
 
   <!-- Description - tekstområde -->
