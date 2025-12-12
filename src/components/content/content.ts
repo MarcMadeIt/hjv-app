@@ -4,15 +4,15 @@ import { renderListScenario } from "./listScenario/listScenario";
 
 export function renderContent(host: HTMLDivElement): void {
   host.innerHTML = `
-    <div id="content-initial">
-      <button class="button button-secondary xs-full-width" id="create-scenario-btn">
+    <div id="content-initial" class="content content-view">
+      <button class="button button-primary xs-full-width" id="create-scenario-btn">
         Opret scenario
       </button>
       <div id="actionScenario"> </div>
       <div id="listScenario"> </div>
     </div>
 
-    <div id="scenario-view" style="display:none;">
+    <div id="scenario-view" class="content-view" style="display:none; ">
     </div>
   `;
 
@@ -36,11 +36,11 @@ export function renderContent(host: HTMLDivElement): void {
 
   button.addEventListener("click", () => {
     initialView.style.display = "none";
-    scenarioView.style.display = "block";
+    scenarioView.style.display = "";
 
     scenarioView.innerHTML = `
       <button class="button button-tertiary xs-full-width" id="back-btn">
-        Tilbage
+       <i class="icon icon-chevron-left"></i>  Tilbage
       </button>
       <div id="scenario-content"></div>
     `;
@@ -55,7 +55,7 @@ export function renderContent(host: HTMLDivElement): void {
     if (backBtn) {
       backBtn.addEventListener("click", () => {
         scenarioView.style.display = "none";
-        initialView.style.display = "block";
+        initialView.style.display = "";
         scenarioView.innerHTML = "";
       });
     }

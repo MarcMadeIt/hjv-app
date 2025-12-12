@@ -1,8 +1,9 @@
 import "./createScenario.css";
 import type { MissionTask } from "../../types/types";
-import { renderCreateTask } from "../createTask/createTask";
+import { renderEditTask } from "../editTask/editTask";
 import { fetchTasks } from "./helpers/fetchTasks";
 import { focusTaskOnMap, showTasksOnMap } from "../map/map";
+import { renderChooseTasks } from "./chooseTasks/chooseTasks";
 
 let tasksCache: MissionTask[] | null = null;
 let nextId = 1000;
@@ -32,13 +33,14 @@ export function renderCreateScenario(host: HTMLDivElement): void {
 
   const taskDrafts = new Map<number, MissionTask>();
   const deletedTaskIdsByType = new Map<ScenarioType, Set<number>>();
+  const selectedTaskIdsByType = new Map<ScenarioType, Set<number>>();
   let currentType: ScenarioType | null = null;
 
   host.innerHTML = `
     <form id="scenario-form" action="">
-      <div id="scenario-view">
+      <div id="scenario-shell" class="content-view">
         <div class="scenario-form-group">
-          <label class="form-label" for="scenario-name">Navn</label>
+          <label class="form-label" for="scenario-name">Titel på Scenarie</label>
           <input type="text" id="scenario-name" name="scenario-name" class="form-input" required>
         </div>
 
@@ -58,6 +60,8 @@ export function renderCreateScenario(host: HTMLDivElement): void {
           </fieldset>
         </div>
 
+        <div id="choose-tasks-container"></div>
+        <div id="tasks-list"></div>
         <div class="scenario-form-group">
           <label class="form-label" for="scenario-desc">Beskrivelse</label>
           <textarea class="form-input" id="scenario-desc" name="scenario-desc" rows="5" required></textarea>
@@ -66,22 +70,21 @@ export function renderCreateScenario(host: HTMLDivElement): void {
         <div class="scenario-form-group">
           <div class="mb-7">
             <button type="button" class="button button-primary" id="add-task-btn">
-              Opret ny opgave
+              Opret Scenarie
             </button>
           </div>
-          <label class="form-label">Opgaver</label>
-          <div id="tasks-list"></div>
+    
+
         </div>
       </div>
-
-      <div id="task-detail-view" style="display:none;"></div>
+      <div id="task-detail-view" class="content-view" style="display:none;"></div>
     </form>
   `;
 
   const radios = host.querySelectorAll<HTMLInputElement>(
     'input[name="scenario-type"]'
   );
-  const scenarioView = host.querySelector<HTMLDivElement>("#scenario-view");
+  const scenarioShell = host.querySelector<HTMLDivElement>("#scenario-shell");
   const taskDetailView =
     host.querySelector<HTMLDivElement>("#task-detail-view");
   const tasksList = host.querySelector<HTMLDivElement>("#tasks-list");
@@ -90,14 +93,18 @@ export function renderCreateScenario(host: HTMLDivElement): void {
   const scenarioDescInput =
     host.querySelector<HTMLTextAreaElement>("#scenario-desc");
   const addTaskBtn = host.querySelector<HTMLButtonElement>("#add-task-btn");
+  const chooseTasksContainer = host.querySelector<HTMLDivElement>(
+    "#choose-tasks-container"
+  );
 
   if (
     !tasksList ||
     !taskDetailView ||
-    !scenarioView ||
+    !scenarioShell ||
     !scenarioNameInput ||
     !scenarioDescInput ||
-    !addTaskBtn
+    !addTaskBtn ||
+    !chooseTasksContainer
   ) {
     return;
   }
@@ -119,7 +126,18 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     return set;
   }
 
-  async function getCurrentTasks(type: ScenarioType): Promise<MissionTask[]> {
+  function getSelectedSet(type: ScenarioType): Set<number> {
+    let set = selectedTaskIdsByType.get(type);
+    if (!set) {
+      set = new Set<number>();
+      selectedTaskIdsByType.set(type, set);
+    }
+    return set;
+  }
+
+  async function buildTaskMapForType(
+    type: ScenarioType
+  ): Promise<Map<number, MissionTask>> {
     const all = await loadTasks();
     const deleted = getDeletedSet(type);
 
@@ -130,37 +148,95 @@ export function renderCreateScenario(host: HTMLDivElement): void {
 
     const byId = new Map<number, MissionTask>();
     base.forEach((t) => byId.set(t.ID, { ...t }));
-    draftsForType.forEach((t) => byId.set(t.ID, { ...t })); // overrides + new
+    draftsForType.forEach((t) => byId.set(t.ID, { ...t }));
 
-    return Array.from(byId.values());
+    return byId;
   }
+
+  async function getAvailableTasks(type: ScenarioType): Promise<MissionTask[]> {
+    const map = await buildTaskMapForType(type);
+    return Array.from(map.values()).map((task) => ({ ...task }));
+  }
+
+  async function getCurrentTasks(type: ScenarioType): Promise<MissionTask[]> {
+    const map = await buildTaskMapForType(type);
+    const selected = getSelectedSet(type);
+
+    if (!selected.size) {
+      return [];
+    }
+
+    const missing: number[] = [];
+    const result: MissionTask[] = [];
+
+    selected.forEach((id) => {
+      const task = map.get(id);
+      if (task) {
+        result.push({ ...task });
+      } else {
+        missing.push(id);
+      }
+    });
+
+    if (missing.length) {
+      missing.forEach((id) => selected.delete(id));
+    }
+
+    return result;
+  }
+
+  const chooseTasks = renderChooseTasks(chooseTasksContainer, {
+    requestTasks: (type) => getAvailableTasks(type),
+    onApplySelection: (type, selection) => {
+      const set = getSelectedSet(type);
+      set.clear();
+      selection.forEach((id) => set.add(id));
+
+      if (currentType === type) {
+        renderTasks(type);
+      }
+    },
+  });
+
+  chooseTasks.setScenarioType(null, new Set<number>());
 
   async function renderTasks(type: ScenarioType) {
     const currentTasks = await getCurrentTasks(type);
 
-    if (!tasksList || !taskDetailView || !scenarioView) return;
+    if (!tasksList || !taskDetailView || !scenarioShell) return;
 
     if (!currentTasks.length) {
-      tasksList.innerHTML = `<p>Ingen opgaver af typen "${type}".</p>`;
+      const selected = getSelectedSet(type);
+      if (selected.size) {
+        tasksList.innerHTML = `<p>Ingen opgaver tilgængelige for typen "${type}".</p>`;
+      } else {
+        tasksList.innerHTML = `<p>Ingen opgaver valgt. Brug "Vælg opgaver" for at tilføje.</p>`;
+      }
       showTasksOnMap([]);
+      chooseTasks.refresh(type, new Set(selected)).catch(() => void 0);
       return;
     }
 
     tasksList.innerHTML = currentTasks
       .map(
         (t) => `
-        <button
+        
+        <strong
           type="button"
-          class="button button-secondary task-btn xs-full-width"
+          class="badge badge-success badge-task"
           data-id="${t.ID}"
-        >
+        ><i class="icon icon-check" aria-hidden="true"></i>
           ${t.Title}
-        </button>
+        </strong>
       `
       )
       .join("");
 
     showTasksOnMap(currentTasks);
+
+    chooseTasks
+      .refresh(type, new Set(getSelectedSet(type)))
+      .catch(() => void 0);
 
     tasksList.onclick = (event) => {
       const target = event.target as HTMLElement;
@@ -171,8 +247,8 @@ export function renderCreateScenario(host: HTMLDivElement): void {
       const task = currentTasks.find((t) => t.ID === id);
       if (!task) return;
 
-      scenarioView.style.display = "none";
-      taskDetailView.style.display = "block";
+      scenarioShell.style.display = "none";
+      taskDetailView.style.display = "";
 
       taskDetailView.innerHTML = `
         <button type="button" class="button button-tertiary mb-4" id="back-to-scenario">
@@ -189,7 +265,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
 
       focusTaskOnMap(task);
 
-      renderCreateTask(detailHost, task, {
+      renderEditTask(detailHost, task, {
         onChange: (updated) => {
           taskDrafts.set(updated.ID, updated);
 
@@ -199,6 +275,12 @@ export function renderCreateScenario(host: HTMLDivElement): void {
           if (btn) {
             btn.textContent = updated.Title;
           }
+
+          if (currentType === updated.Type) {
+            chooseTasks
+              .refresh(updated.Type, new Set(getSelectedSet(updated.Type)))
+              .catch(() => void 0);
+          }
         },
         onDelete: (taskId) => {
           if (!currentType) return;
@@ -206,7 +288,14 @@ export function renderCreateScenario(host: HTMLDivElement): void {
           deletedSet.add(taskId);
           taskDrafts.delete(taskId);
 
-          scenarioView.style.display = "block";
+          const selectedSet = getSelectedSet(currentType);
+          selectedSet.delete(taskId);
+
+          chooseTasks
+            .refresh(currentType, new Set(selectedSet))
+            .catch(() => void 0);
+
+          scenarioShell.style.display = "";
           taskDetailView.style.display = "none";
 
           renderTasks(currentType);
@@ -214,7 +303,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
       });
 
       backBtn.addEventListener("click", () => {
-        scenarioView.style.display = "block";
+        scenarioShell.style.display = "";
         taskDetailView.style.display = "none";
         if (currentType) {
           renderTasks(currentType);
@@ -244,6 +333,11 @@ export function renderCreateScenario(host: HTMLDivElement): void {
 
     taskDrafts.set(newTask.ID, newTask);
 
+    const selectedSet = getSelectedSet(currentType);
+    selectedSet.add(newTask.ID);
+
+    chooseTasks.refresh(currentType, new Set(selectedSet)).catch(() => void 0);
+
     await renderTasks(currentType);
 
     const btn = tasksList.querySelector<HTMLButtonElement>(
@@ -271,11 +365,14 @@ export function renderCreateScenario(host: HTMLDivElement): void {
       taskDrafts.clear();
       const deletedSet = getDeletedSet(value);
       deletedSet.clear();
+      const selectedSet = getSelectedSet(value);
+      selectedSet.clear();
 
       tasksList.innerHTML = "";
       taskDetailView.style.display = "none";
-      scenarioView.style.display = "block";
+      scenarioShell.style.display = "";
 
+      chooseTasks.setScenarioType(value, new Set(selectedSet));
       renderTasks(value);
     });
   });

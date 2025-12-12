@@ -46,8 +46,8 @@ main {
 }
 
 .button-primary {
-  background-color: var(--color-secondary) !important;
-  flex: block;
+  background-color: var(--color-tertiary-green) !important;
+
 }
 
 .button-secondary {
@@ -72,7 +72,16 @@ main {
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+}
 
+.content-view {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 #map-frame {

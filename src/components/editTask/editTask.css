@@ -42,9 +42,6 @@
 
 /* Status - buttons   */
 
-.button-primary {
-  background-color: var(--color-tertiary-lightblue) !important;
-}
 
 .button-primary:hover {
   filter: brightness(1.05);

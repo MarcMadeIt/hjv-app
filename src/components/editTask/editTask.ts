@@ -1,4 +1,4 @@
-import "./createTask.css";
+import "./editTask.css";
 import type { MissionTask } from "../../types/types";
 
 interface TaskDetailCallbacks {
@@ -6,7 +6,7 @@ interface TaskDetailCallbacks {
   onDelete: (taskId: number) => void;
 }
 
-export function renderCreateTask(
+export function renderEditTask(
   host: HTMLDivElement,
   task: MissionTask,
   callbacks: TaskDetailCallbacks

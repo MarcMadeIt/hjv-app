@@ -1,77 +1,62 @@
-#form {
-  display: flex;
-  padding: 18px 19px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 28px;
-  flex: 1 0 0;
+#scenario-shell {
+    display: flex;
+    padding: 18px 19px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    flex: 1 0 0;
 }
 
 /* Opgaver - rolldown (select / region)   */
 .scenario-form-group {
-  display: flex;
-  width: 379px;
-  flex-direction: column;
-  align-items: flex-start;
+    display: flex;
+    width: 379px;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#tasks-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
 }
 
 #radio-options .form-group-radio {
-  margin-top: 10px;
+    margin-top: 10px;
 }
 
 .form-label {
-  color: var(--color-tertiary-black);
+    color: var(--color-tertiary-black);
 }
 
 /* Name - input */
 
 .form-input {
-  color: var(--color-text);
+    color: var(--color-text);
 }
 
 /* Types - radiobutton  */
 
 .form-radio {
-  accent-color: var(--color-secondary);
+    accent-color: var(--color-secondary);
 }
 
 #radio-options {
-  display: flex;
-  align-items: center;
-  align-content: center;
-  gap: 30px;
-  align-self: stretch;
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    gap: 30px;
+    align-self: stretch;
+    flex-wrap: wrap;
 }
 
-/* Status - buttons   */
-
-/* Give it another class name here and it the div */
-/* .button-primary {
-  background-color: var(--color-tertiary-lightblue) !important;
-} */
-
-.button-primary:hover {
-  filter: brightness(1.05);
-}
-
-/* Give it another class name here and it the div */
-/* .button-secondary {
-  background-color: var(--color-tertiary-black) !important;
-} */
-
-.button-secondary:hover {
-  filter: brightness(1.05);
-}
-
-.button-tertiary:hover,
-.button-tertiary:hover a {
-  text-decoration: none !important;
-}
-
-#mb-opdateret-nulstil {
-  display: flex;
-  width: 313px;
-  align-items: flex-start;
-  gap: 12px;
+.badge {
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 5px;
+    padding: 10px 12px;
+    font-size: 14px;
 }
