@@ -67,6 +67,13 @@ export function showTasksOnMap(tasks: MissionTask[]): void {
       map: mapInstance!,
       position,
       title: task.Title,
+      label: {
+        text: task.Title,         // always visible
+        // color: "#000",
+        // fontSize: "12px",
+        // fontWeight: "600",
+      },
+      // labelAnchor: new google.maps.Point(16, 0) // sometimes useful
     });
     markers.push(marker);
     bounds.extend(position);
@@ -78,16 +85,23 @@ export function showTasksOnMap(tasks: MissionTask[]): void {
 export function focusTaskOnMap(task: MissionTask): void {
   if (!mapInstance || !MarkerClass) return;
 
-  clearMarkers();
+/*  clearMarkers(); */
 
   const position = { lat: task.Latitude, lng: task.Longitude };
   const marker = new MarkerClass({
     map: mapInstance,
     position,
     title: task.Title,
-  });
+    label: {
+        text: task.Title,         // always visible
+        // color: "#000",
+        // fontSize: "12px",
+        // fontWeight: "600",
+      },
+      // labelAnchor: new google.maps.Point(16, 0) // sometimes useful
+    });
   markers.push(marker);
 
   mapInstance.setCenter(position);
-  mapInstance.setZoom(15);
+  mapInstance.setZoom(20);
 }

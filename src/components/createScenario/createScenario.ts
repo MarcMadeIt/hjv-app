@@ -237,7 +237,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     chooseTasks
       .refresh(type, new Set(getSelectedSet(type)))
       .catch(() => void 0);
-
+/*
     tasksList.onclick = (event) => {
       const target = event.target as HTMLElement;
       const button = target.closest<HTMLButtonElement>(".task-btn");
@@ -249,7 +249,23 @@ export function renderCreateScenario(host: HTMLDivElement): void {
 
       scenarioShell.style.display = "none";
       taskDetailView.style.display = "";
+*/
 
+    tasksList.onclick = (event) => {
+      const target = event.target as HTMLElement;
+      const badge = target.closest<HTMLElement>(".badge-task");
+      if (!badge) return;
+
+      const id = Number(badge.dataset.id);
+      const task = currentTasks.find((t) => t.ID === id);
+      if (!task) return;
+
+     /* scenarioShell.style.display = "none";*/
+      taskDetailView.style.display = "";
+
+      focusTaskOnMap(task);
+
+/*
       taskDetailView.innerHTML = `
         <button type="button" class="button button-tertiary mb-4" id="back-to-scenario">
           Tilbage til scenarie
@@ -257,13 +273,12 @@ export function renderCreateScenario(host: HTMLDivElement): void {
         <div id="task-detail"></div>
       `;
 
+
       const backBtn =
         taskDetailView.querySelector<HTMLButtonElement>("#back-to-scenario");
       const detailHost =
         taskDetailView.querySelector<HTMLDivElement>("#task-detail");
       if (!backBtn || !detailHost) return;
-
-      focusTaskOnMap(task);
 
       renderEditTask(detailHost, task, {
         onChange: (updated) => {
@@ -308,7 +323,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
         if (currentType) {
           renderTasks(currentType);
         }
-      });
+      }); */
     };
   }
 
