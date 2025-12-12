@@ -1,12 +1,11 @@
 import "./createScenario.css";
-import type { MissionTask } from "../../types/types";
-import { renderEditTask } from "../editTask/editTask";
+import type { MissionTask, ScenarioType } from "../../types/types";
 import { fetchTasks } from "./helpers/fetchTasks";
 import { focusTaskOnMap, showTasksOnMap } from "../map/map";
 import { renderChooseTasks } from "./chooseTasks/chooseTasks";
+import saveScenarioToJsonBin from "./helpers/saveScenario";
 
 let tasksCache: MissionTask[] | null = null;
-let nextId = 1000;
 
 async function loadTasks(): Promise<MissionTask[]> {
   if (!tasksCache) {
@@ -15,8 +14,6 @@ async function loadTasks(): Promise<MissionTask[]> {
   }
   return tasksCache;
 }
-
-type ScenarioType = "Land" | "Sø";
 
 interface ScenarioDraft {
   type: ScenarioType | null;
@@ -67,14 +64,11 @@ export function renderCreateScenario(host: HTMLDivElement): void {
           <textarea class="form-input" id="scenario-desc" name="scenario-desc" rows="5" required></textarea>
         </div>
 
-        <div class="scenario-form-group">
-          <div class="mb-7">
-            <button type="button" class="button button-primary" id="add-task-btn">
-              Opret Scenarie
-            </button>
-          </div>
-    
-
+        </div>
+        <div class="mb-7">
+          <button type="button" class="button button-primary" id="save-scenario-btn">
+            Gem scenarie
+          </button>
         </div>
       </div>
       <div id="task-detail-view" class="content-view" style="display:none;"></div>
@@ -92,10 +86,11 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     host.querySelector<HTMLInputElement>("#scenario-name");
   const scenarioDescInput =
     host.querySelector<HTMLTextAreaElement>("#scenario-desc");
-  const addTaskBtn = host.querySelector<HTMLButtonElement>("#add-task-btn");
   const chooseTasksContainer = host.querySelector<HTMLDivElement>(
     "#choose-tasks-container"
   );
+  const saveScenarioBtn =
+    host.querySelector<HTMLButtonElement>("#save-scenario-btn");
 
   if (
     !tasksList ||
@@ -103,8 +98,8 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     !scenarioShell ||
     !scenarioNameInput ||
     !scenarioDescInput ||
-    !addTaskBtn ||
-    !chooseTasksContainer
+    !chooseTasksContainer ||
+    !saveScenarioBtn
   ) {
     return;
   }
@@ -158,7 +153,10 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     return Array.from(map.values()).map((task) => ({ ...task }));
   }
 
-  async function getCurrentTasks(type: ScenarioType): Promise<MissionTask[]> {
+  async function getCurrentTasks(
+    type: ScenarioType | null
+  ): Promise<MissionTask[]> {
+    if (!type) return [];
     const map = await buildTaskMapForType(type);
     const selected = getSelectedSet(type);
 
@@ -237,7 +235,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     chooseTasks
       .refresh(type, new Set(getSelectedSet(type)))
       .catch(() => void 0);
-/*
+    /*
     tasksList.onclick = (event) => {
       const target = event.target as HTMLElement;
       const button = target.closest<HTMLButtonElement>(".task-btn");
@@ -260,12 +258,12 @@ export function renderCreateScenario(host: HTMLDivElement): void {
       const task = currentTasks.find((t) => t.ID === id);
       if (!task) return;
 
-     /* scenarioShell.style.display = "none";*/
+      /* scenarioShell.style.display = "none";*/
       taskDetailView.style.display = "";
 
       focusTaskOnMap(task);
 
-/*
+      /*
       taskDetailView.innerHTML = `
         <button type="button" class="button button-tertiary mb-4" id="back-to-scenario">
           Tilbage til scenarie
@@ -327,7 +325,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     };
   }
 
-  addTaskBtn.addEventListener("click", async () => {
+  /*addTaskBtn.addEventListener("click", async () => {
     if (!currentType) return;
 
     const newTask: MissionTask = {
@@ -361,7 +359,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     if (btn) {
       btn.click();
     }
-  });
+  });*/
 
   radios.forEach((radio) => {
     radio.addEventListener("change", (e) => {
@@ -392,5 +390,12 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     });
   });
 
-  // Note from Nina: here im gonna send the data once its ready
+  saveScenarioBtn.addEventListener("click", async () => {
+    try {
+      const tasks = await getCurrentTasks(currentType);
+      await saveScenarioToJsonBin(currentType, scenarioDraft, tasks);
+    } catch (e) {
+      console.error(e);
+    }
+  });
 }
