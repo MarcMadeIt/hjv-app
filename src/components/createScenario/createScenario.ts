@@ -21,7 +21,10 @@ interface ScenarioDraft {
   description: string;
 }
 
-export function renderCreateScenario(host: HTMLDivElement): void {
+export function renderCreateScenario(
+  host: HTMLDivElement,
+  onSaved?: () => void
+): void {
   let scenarioDraft: ScenarioDraft = {
     type: null,
     name: "",
@@ -394,6 +397,7 @@ export function renderCreateScenario(host: HTMLDivElement): void {
     try {
       const tasks = await getCurrentTasks(currentType);
       await saveScenarioToJsonBin(currentType, scenarioDraft, tasks);
+      onSaved?.();
     } catch (e) {
       console.error(e);
     }

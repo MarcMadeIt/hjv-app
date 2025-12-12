@@ -48,7 +48,13 @@ export function renderContent(host: HTMLDivElement): void {
     const scenarioContent =
       scenarioView.querySelector<HTMLDivElement>("#scenario-content");
     if (scenarioContent) {
-      renderCreateScenario(scenarioContent);
+      renderCreateScenario(scenarioContent, () => {
+        scenarioView.style.display = "none";
+        initialView.style.display = "";
+        scenarioView.innerHTML = "";
+        renderListScenario(listScenario);
+        renderActionScenario(actionScenario);
+      });
     }
 
     const backBtn = scenarioView.querySelector<HTMLButtonElement>("#back-btn");
