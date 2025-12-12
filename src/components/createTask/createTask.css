@@ -3,20 +3,16 @@
   padding: 18px 19px;
   flex-direction: column;
   align-items: flex-start;
-  gap: 28px;
+  gap: 38px;
   flex: 1 0 0;
 }
 
 /* Opgaver - rolldown (select / region)   */
-.scenario-form-group {
+.task-form-group {
   display: flex;
   width: 379px;
   flex-direction: column;
   align-items: flex-start;
-}
-
-#radio-options .form-group-radio {
-  margin-top: 10px;
 }
 
 .form-label {
@@ -46,19 +42,17 @@
 
 /* Status - buttons   */
 
-/* Give it another class name here and it the div */
-/* .button-primary {
+.button-primary {
   background-color: var(--color-tertiary-lightblue) !important;
-} */
+}
 
 .button-primary:hover {
   filter: brightness(1.05);
 }
 
-/* Give it another class name here and it the div */
-/* .button-secondary {
+.button-secondary {
   background-color: var(--color-tertiary-black) !important;
-} */
+}
 
 .button-secondary:hover {
   filter: brightness(1.05);

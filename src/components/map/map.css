@@ -1,6 +1,5 @@
 #map {
-    flex: 2;
-    height: 800px;
-    width: 100%;
-
+  flex: 2;
+  height: 100%;
+  width: 100%;
 }

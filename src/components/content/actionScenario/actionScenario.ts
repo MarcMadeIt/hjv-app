@@ -4,9 +4,6 @@ export function renderActionScenario(host: HTMLDivElement): void {
   host.innerHTML = `
 
   <div id="actions">
-    <button class="button button-secondary xs-full-width" aria-label="Opret scenarie">
-        Opret scenarie
-    </button>
     <div class="form-group search">
       <label for="input-type-text-icon" class="sr-only">Søg efter indhold</label>
       <input class="form-input input-char-27" id="input-type-text-icon" name="search-icon"

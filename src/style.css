@@ -5,13 +5,13 @@
   --color-primary: #7e1431;
   --color-secondary: #38524f;
   --color-tertiary-green: #4f7149;
-  --color-tertiary-darkblue: #00254A;
-  --color-tertiary-lightblue: #3196D8;
-  --color-tertiary-orange: #E0631A;
-  --color-tertiary-red: #CF0027;
+  --color-tertiary-darkblue: #00254a;
+  --color-tertiary-lightblue: #3196d8;
+  --color-tertiary-orange: #e0631a;
+  --color-tertiary-red: #cf0027;
   --color-tertiary-black: #262523;
-  --color-tertiary-purple: #821E75;
-  --color-bg: #E6E8E8;
+  --color-tertiary-purple: #821e75;
+  --color-bg: #e6e8e8;
   --color-border: #d3d7d6;
   --color-text: #000000;
   --color-text-2: #fff;
@@ -60,11 +60,9 @@ main {
   padding: 15px;
 }
 
-
-
 #container {
   display: flex;
-
+  height: calc(100vh - 120px);
 }
 
 #content {

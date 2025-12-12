@@ -1,6 +1,5 @@
 import "./style.css";
 import { renderContent } from "./components/content/content";
-import { renderCreateScenario } from "./components/createScenario/createScenario";
 import { renderHeader } from "./components/header/header";
 import { renderMap } from "./components/map/map";
 import { renderNavTab } from "./components/navTab/navTab";
@@ -24,8 +23,6 @@ if (appRoot) {
   const header = appRoot.querySelector<HTMLDivElement>("#header");
   const content = appRoot.querySelector<HTMLDivElement>("#content");
   const map = appRoot.querySelector<HTMLDivElement>("#map-frame");
-  const createScenario =
-    appRoot.querySelector<HTMLDivElement>("#createScenario");
   const navTab = appRoot.querySelector<HTMLDivElement>("#nav-tab");
 
   if (header) {
@@ -36,9 +33,6 @@ if (appRoot) {
   }
   if (map) {
     renderMap(map);
-  }
-  if (createScenario) {
-    renderCreateScenario(createScenario);
   }
   if (navTab) {
     renderNavTab(navTab, { contentHost: content, mapHost: map });
