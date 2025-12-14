@@ -1,9 +1,10 @@
 import "./createScenario.css";
 import type { MissionTask, ScenarioType } from "../../types/types";
 import { fetchTasks } from "./helpers/fetchTasks";
-import { focusTaskOnMap, showTasksOnMap } from "../map/map";
+import { focusTaskOnMap, showTasksOnMap, setOnTaskCoordsDraftChange } from "../map/map";
 import { renderChooseTasks } from "./chooseTasks/chooseTasks";
 import saveScenarioToJsonBin from "./helpers/saveScenario";
+
 
 let tasksCache: MissionTask[] | null = null;
 
@@ -35,6 +36,34 @@ export function renderCreateScenario(
   const deletedTaskIdsByType = new Map<ScenarioType, Set<number>>();
   const selectedTaskIdsByType = new Map<ScenarioType, Set<number>>();
   let currentType: ScenarioType | null = null;
+
+//coordinate changes will be stored as task drafts and only persisted when saving scenario - original task data remains unchanges
+    // coordinate changes coming from the map
+  setOnTaskCoordsDraftChange((taskId, lat, lng) => {
+    if (!currentType) return;
+
+    // 1 - existing draft first
+    const fromDraft = taskDrafts.get(taskId);
+
+    // 2 - or fall back to original task
+    let baseTask: MissionTask | undefined = fromDraft;
+
+    if (!baseTask && tasksCache) {
+      baseTask = tasksCache.find((t) => t.ID === taskId);
+    }
+
+    if (!baseTask) return;
+
+    // 3 - stor3 draft override
+    const updated: MissionTask = {
+      ...baseTask,
+      Latitude: lat,
+      Longitude: lng,
+    };
+
+    taskDrafts.set(taskId, updated);
+  });
+
 
   host.innerHTML = `
     <form id="scenario-form" action="">

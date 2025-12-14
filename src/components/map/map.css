@@ -3,3 +3,108 @@
   height: 100%;
   width: 100%;
 }
+/* --- Google Maps InfoWindow card --- */
+.task-card {
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+.task-card__title {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-tertiary-darkblue);
+}
+
+.task-card__row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-card__row label {
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.task-card input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text);
+  outline: none;
+}
+
+.task-card input:focus {
+  box-shadow: var(--shadow-focus);
+  border-color: rgba(56, 82, 79, 0.45);
+}
+
+.task-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.task-card__actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.task-card__actions button.save {
+  background: var(--color-tertiary-green);
+  color: var(--color-text-2);
+}
+
+.task-card__actions button.pick {
+  background: var(--color-secondary);
+  color: var(--color-text-2);
+}
+
+.task-card__actions button:hover {
+  filter: brightness(0.95);
+}
+
+.task-card__actions .status {
+  font-size: 12px;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+/* Optional: nicer ✓ state if you set status text */
+.task-card__actions .status:has(*) {
+  margin-left: auto;
+}
+/* Tighten the Google InfoWindow chrome */
+.gm-style .gm-style-iw {
+  padding: 0 !important;
+}
+
+.gm-style .gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+/* Remove the default white background + shadow so your card controls it */
+.gm-style .gm-style-iw-c {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
