@@ -1,7 +1,6 @@
 :root {
   font-family: Verdana, system-ui, -apple-system, "Segoe UI", sans-serif;
 
-
   --color-primary: #7e1431;
   --color-secondary: #38524f;
   --color-tertiary-green: #4f7149;
@@ -47,14 +46,12 @@ main {
 
 .button-primary {
   background-color: var(--color-tertiary-green) !important;
-
 }
 
 .button-secondary {
   background-color: var(--color-tertiary-green) !important;
   color: var(--color-text-2) !important;
 }
-
 
 #listTasks {
   padding: 15px;
@@ -72,6 +69,7 @@ main {
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
+  overflow-y: auto;
 }
 
 .content-view {
@@ -86,7 +84,6 @@ main {
 
 #map-frame {
   flex: 4;
-
 }
 
 @media (max-width: 768px) {
@@ -96,7 +93,6 @@ main {
 
   #content {
     flex: 0;
-
   }
 
   #container {

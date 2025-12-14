@@ -1,5 +1,8 @@
 import { renderCreateScenario } from "../createScenario/createScenario";
-import { renderActionScenario } from "./actionScenario/actionScenario";
+import {
+  renderActionScenario,
+  type ScenarioFilter,
+} from "./actionScenario/actionScenario";
 import { renderListScenario } from "./listScenario/listScenario";
 
 export function renderContent(host: HTMLDivElement): void {
@@ -8,12 +11,11 @@ export function renderContent(host: HTMLDivElement): void {
       <button class="button button-primary xs-full-width" id="create-scenario-btn">
         Opret scenario
       </button>
-      <div id="actionScenario"> </div>
-      <div id="listScenario"> </div>
+      <div id="actionScenario"></div>
+      <div id="listScenario"></div>
     </div>
 
-    <div id="scenario-view" class="content-view" style="display:none; ">
-    </div>
+    <div id="scenario-view" class="content-view" style="display:none;"></div>
   `;
 
   const button = host.querySelector<HTMLButtonElement>("#create-scenario-btn");
@@ -31,8 +33,30 @@ export function renderContent(host: HTMLDivElement): void {
   )
     return;
 
-  renderListScenario(listScenario);
-  renderActionScenario(actionScenario);
+  const state = {
+    query: "",
+    filter: "all" as ScenarioFilter,
+  };
+
+  const rerenderList = () => {
+    renderListScenario(listScenario, {
+      query: state.query,
+      filter: state.filter,
+    });
+  };
+
+  renderActionScenario(actionScenario, {
+    onSearch: (q) => {
+      state.query = q;
+      rerenderList();
+    },
+    onFilter: (f) => {
+      state.filter = f;
+      rerenderList();
+    },
+  });
+
+  rerenderList();
 
   button.addEventListener("click", () => {
     initialView.style.display = "none";
@@ -40,7 +64,7 @@ export function renderContent(host: HTMLDivElement): void {
 
     scenarioView.innerHTML = `
       <button class="button button-tertiary xs-full-width" id="back-btn">
-       <i class="icon icon-chevron-left"></i>  Tilbage
+        <i class="icon icon-chevron-left"></i> Tilbage
       </button>
       <div id="scenario-content"></div>
     `;
@@ -52,18 +76,16 @@ export function renderContent(host: HTMLDivElement): void {
         scenarioView.style.display = "none";
         initialView.style.display = "";
         scenarioView.innerHTML = "";
-        renderListScenario(listScenario);
-        renderActionScenario(actionScenario);
+
+        rerenderList();
       });
     }
 
     const backBtn = scenarioView.querySelector<HTMLButtonElement>("#back-btn");
-    if (backBtn) {
-      backBtn.addEventListener("click", () => {
-        scenarioView.style.display = "none";
-        initialView.style.display = "";
-        scenarioView.innerHTML = "";
-      });
-    }
+    backBtn?.addEventListener("click", () => {
+      scenarioView.style.display = "none";
+      initialView.style.display = "";
+      scenarioView.innerHTML = "";
+    });
   });
 }
