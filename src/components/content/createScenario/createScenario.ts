@@ -1,11 +1,11 @@
 import "./createScenario.css";
-import type { MissionTask, ScenarioType } from "../../types/types";
+import type { MissionTask, ScenarioType } from "../../../types/types";
 import { fetchTasks } from "./helpers/fetchTasks";
 import {
   focusTaskOnMap,
   showTasksOnMap,
   setOnTaskCoordsDraftChange,
-} from "../map/map";
+} from "../../map/map";
 import { renderChooseTasks } from "./chooseTasks/chooseTasks";
 import saveScenarioToJsonBin from "./helpers/saveScenario";
 
@@ -95,7 +95,7 @@ export function renderCreateScenario(
         </div>
 
         </div>
-        <div class="mb-7">
+        <div class="mt-7">
           <button type="button" class="button button-primary" id="save-scenario-btn">
             Gem scenarie
           </button>

@@ -1,4 +1,4 @@
-import type { MissionTask } from "../../../types/types";
+import type { MissionTask } from "../../../../types/types";
 
 export async function fetchTasks(): Promise<MissionTask[]> {
   try {

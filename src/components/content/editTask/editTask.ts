@@ -1,5 +1,5 @@
 import "./editTask.css";
-import type { MissionTask } from "../../types/types";
+import type { MissionTask } from "../../../types/types";
 
 interface TaskDetailCallbacks {
   onChange: (updated: MissionTask) => void;

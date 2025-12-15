@@ -1,5 +1,5 @@
-import { renderEditTask } from "../../editTask/editTask";
-import { showTasksOnMap } from "../../map/map";
+import { renderEditTask } from "../editTask/editTask";
+import { showTasksOnMap, setOnTaskCoordsDraftChange } from "../../map/map";
 import type {
   Env,
   MissionTask,
@@ -83,13 +83,14 @@ function renderTaskList(
       (task) => `
         <button
           type="button"
-          class="badge badge-success scenario-task-badge${
+          class="py-2 scenario-task-badge${
             selectedId === task.ID ? " is-active" : ""
           }"
           data-id="${task.ID}"
         >
-          <i class="icon icon-check" aria-hidden="true"></i>
+            <i class="icon icon-edit" aria-hidden="true"></i>
           ${task.Title}
+  
         </button>
       `
     )
@@ -112,15 +113,12 @@ export function renderScenarioEditor(
   host.innerHTML = `
     <div class="scenario-edit-header">
       <div class="scenario-edit-header-bar">
-        <h2 class="mb-4">Redigér scenarie</h2>
-        <button type="button" class="button button-tertiary" id="scenario-edit-close">
-          Afslut redigering
-        </button>
+        <h4 class="mb-4">Redigér scenarie</h4>
       </div>
       <p class="text-muted mb-5">
         ${scenario.title ?? "Uden titel"} – ${
     scenario.type === "land" ? "Land" : "Sø"
-  }
+  } 
       </p>
     </div>
     <div class="scenario-edit-body">
@@ -145,6 +143,80 @@ export function renderScenarioEditor(
 
   let activeTaskId: number | null = null;
 
+  const mountTaskDetail = (
+    task: MissionTask,
+    options?: { preserveFocus?: boolean }
+  ) => {
+    const shouldPreserve = Boolean(options?.preserveFocus);
+    const activeElement = shouldPreserve
+      ? detailHost.contains(document.activeElement)
+        ? (document.activeElement as HTMLElement)
+        : null
+      : null;
+    const activeId = activeElement?.id ?? null;
+
+    activeTaskId = task.ID;
+    renderTaskList(listHost, tasks, activeTaskId);
+
+    renderEditTask(
+      detailHost,
+      { ...task },
+      {
+        onChange: (updated) => {
+          tasks.set(updated.ID, { ...updated });
+          renderTaskList(listHost, tasks, activeTaskId);
+          detailHost.scrollIntoView({ behavior: "smooth", block: "start" });
+          refreshMap(tasks);
+        },
+        onDelete: (taskId) => {
+          tasks.delete(taskId);
+          if (activeTaskId === taskId) {
+            activeTaskId = null;
+            detailHost.innerHTML = `<p>Opgaven er fjernet. Vælg en anden opgave.</p>`;
+          }
+          renderTaskList(listHost, tasks, activeTaskId);
+          refreshMap(tasks);
+        },
+      }
+    );
+
+    if (shouldPreserve && activeId) {
+      const next = detailHost.querySelector<HTMLElement>(`#${activeId}`);
+      if (next) {
+        next.focus();
+        if (next instanceof HTMLInputElement && next.type !== "number") {
+          const length = next.value.length;
+          next.setSelectionRange(length, length);
+        } else if (next instanceof HTMLTextAreaElement) {
+          const length = next.value.length;
+          next.setSelectionRange(length, length);
+        }
+      }
+    }
+  };
+
+  const handleCoordsDraftChange = (
+    taskId: number,
+    lat: number,
+    lng: number
+  ) => {
+    const current = tasks.get(taskId);
+    if (!current) return;
+
+    const updated: MissionTask = { ...current, Latitude: lat, Longitude: lng };
+    tasks.set(taskId, updated);
+
+    refreshMap(tasks);
+
+    if (activeTaskId === taskId) {
+      mountTaskDetail(updated, { preserveFocus: true });
+    } else {
+      renderTaskList(listHost, tasks, activeTaskId);
+    }
+  };
+
+  setOnTaskCoordsDraftChange(handleCoordsDraftChange);
+
   renderTaskList(listHost, tasks, activeTaskId);
 
   listHost.addEventListener("click", (event) => {
@@ -157,34 +229,6 @@ export function renderScenarioEditor(
     const task = tasks.get(id);
     if (!task) return;
 
-    activeTaskId = id;
-    renderTaskList(listHost, tasks, activeTaskId);
-
-    renderEditTask(
-      detailHost,
-      { ...task },
-      {
-        onChange: (updated) => {
-          tasks.set(updated.ID, { ...updated });
-          renderTaskList(listHost, tasks, updated.ID);
-          detailHost.scrollIntoView({ behavior: "smooth", block: "start" });
-          refreshMap(tasks);
-        },
-        onDelete: (taskId) => {
-          tasks.delete(taskId);
-          activeTaskId = null;
-          renderTaskList(listHost, tasks, activeTaskId);
-          detailHost.innerHTML = `<p>Opgaven er fjernet. Vælg en anden opgave.</p>`;
-          refreshMap(tasks);
-        },
-      }
-    );
-  });
-
-  const closeBtn = host.querySelector<HTMLButtonElement>(
-    "#scenario-edit-close"
-  );
-  closeBtn?.addEventListener("click", () => {
-    callbacks.onClose?.();
+    mountTaskDetail(task);
   });
 }

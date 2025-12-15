@@ -1,4 +1,5 @@
 import "./navTab.css";
+import { refreshMapView } from "../../map/map";
 
 export type NavTabView = "list" | "map";
 
@@ -6,6 +7,18 @@ interface RenderNavTabOptions {
   contentHost: HTMLDivElement | null;
   mapHost: HTMLDivElement | null;
   defaultView?: NavTabView;
+}
+
+let controller: ((view: NavTabView) => void) | null = null;
+let currentView: NavTabView | null = null;
+
+export function setNavTabView(view: NavTabView): void {
+  currentView = view;
+  controller?.(view);
+}
+
+export function getNavTabView(): NavTabView | null {
+  return currentView;
 }
 
 export function renderNavTab(
@@ -45,6 +58,7 @@ export function renderNavTab(
   );
 
   const setActiveView = (view: NavTabView) => {
+    currentView = view;
     buttons.forEach((button) => {
       const isActive = button.dataset.view === view;
       button.classList.toggle("is-active", isActive);
@@ -58,6 +72,7 @@ export function renderNavTab(
     } else {
       contentHost.classList.add("is-hidden-mobile");
       mapHost.classList.remove("is-hidden-mobile");
+      refreshMapView();
     }
   };
 
@@ -70,5 +85,7 @@ export function renderNavTab(
     });
   });
 
-  setActiveView(defaultView);
+  controller = setActiveView;
+  const initial = currentView ?? defaultView;
+  setActiveView(initial);
 }

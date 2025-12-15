@@ -3,7 +3,7 @@ import type {
   JsonBinRead,
   MissionTask,
   ScenarioType,
-} from "../../../types/types";
+} from "../../../../types/types";
 
 function envFromType(type: ScenarioType): Env {
   return type === "Land" ? "land" : "sea";

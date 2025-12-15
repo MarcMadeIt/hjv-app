@@ -217,8 +217,8 @@ function openTaskEditorInfoWindow(
     </div>
 
     <div class="task-card__actions">
-      <button class="save">Save</button>
-      <button class="pick">Pick from map</button>
+      <button class="save">Gem</button>
+      <button class="pick">Vælg fra kort</button>
       <span class="status" style="margin-left:8px;"></span>
     </div>
   `;
@@ -235,7 +235,7 @@ function openTaskEditorInfoWindow(
     const lng = Number(lngInput.value);
 
     if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-      status.textContent = "Invalid coordinates";
+      status.textContent = "Ugyldige koordinater";
       return;
     }
 
@@ -243,27 +243,33 @@ function openTaskEditorInfoWindow(
 
     marker.setPosition({ lat, lng });
 
-    status.textContent = "Saved ✓";
+    status.textContent =
+      "Gemt <i class='icon icon-checkmark' aria-hidden='true'></i>";
   });
 
   let picking = false;
 
-  pickBtn.addEventListener("click", () => {
-    picking = !picking;
+  const resetPickButton = () => {
+    picking = false;
+    pickBtn.style.display = "";
+  };
 
-    if (picking) {
-      pickBtn.textContent = "Click on map… (stop)";
-      status.textContent = "Pick a new location";
-      startPickMode((lat, lng) => {
-        latInput.value = String(lat);
-        lngInput.value = String(lng);
-        marker.setPosition({ lat, lng });
-      });
-    } else {
-      pickBtn.textContent = "Pick from map";
-      status.textContent = "";
+  pickBtn.addEventListener("click", () => {
+    if (picking) return;
+
+    picking = true;
+    pickBtn.style.display = "none";
+    status.textContent = "Vælg en ny placering på kortet";
+
+    startPickMode((lat, lng) => {
+      latInput.value = String(lat);
+      lngInput.value = String(lng);
+      marker.setPosition({ lat, lng });
+
       stopPickMode();
-    }
+      resetPickButton();
+      status.textContent = "Placering klar - klik Gem";
+    });
   });
 
   const info = new google.maps.InfoWindow({ content: container });
@@ -271,6 +277,8 @@ function openTaskEditorInfoWindow(
 
   info.addListener("closeclick", () => {
     stopPickMode();
+    resetPickButton();
+    status.textContent = "";
   });
 
   info.open({ map: mapInstance, anchor: marker });
@@ -294,5 +302,33 @@ function stopPickMode() {
   if (pickClickListener) {
     google.maps.event.removeListener(pickClickListener);
     pickClickListener = null;
+  }
+}
+
+export function refreshMapView(): void {
+  if (!mapInstance) return;
+
+  google.maps.event.trigger(mapInstance, "resize");
+
+  if (!markers.length) {
+    return;
+  }
+
+  if (markers.length === 1) {
+    const position = markers[0].getPosition();
+    if (position) {
+      mapInstance.setCenter(position);
+    }
+    return;
+  }
+
+  const bounds = new google.maps.LatLngBounds();
+  markers.forEach((marker) => {
+    const position = marker.getPosition();
+    if (position) bounds.extend(position);
+  });
+
+  if (!bounds.isEmpty()) {
+    mapInstance.fitBounds(bounds);
   }
 }

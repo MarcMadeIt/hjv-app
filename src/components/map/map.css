@@ -3,7 +3,7 @@
   height: 100%;
   width: 100%;
 }
-/* --- Google Maps InfoWindow card --- */
+
 .task-card {
   font-family: inherit;
   color: var(--color-text);
@@ -88,11 +88,10 @@
   white-space: nowrap;
 }
 
-/* Optional: nicer ✓ state if you set status text */
 .task-card__actions .status:has(*) {
   margin-left: auto;
 }
-/* Tighten the Google InfoWindow chrome */
+
 .gm-style .gm-style-iw {
   padding: 0 !important;
 }
@@ -101,7 +100,7 @@
   overflow: hidden !important;
 }
 
-/* Remove the default white background + shadow so your card controls it */
+
 .gm-style .gm-style-iw-c {
   background: transparent !important;
   box-shadow: none !important;

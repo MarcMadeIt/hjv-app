@@ -1,4 +1,4 @@
-import type { MissionTask } from "../../../types/types";
+import type { MissionTask } from "../../../../types/types";
 
 type ScenarioType = MissionTask["Type"];
 

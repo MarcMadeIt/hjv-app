@@ -2,6 +2,7 @@ import deleteScenario from "./helpers/deleteScenario";
 import fetchAllScenarios from "./helpers/fetchAllScenarios";
 import "./listScenario.css";
 import { showScenarioOnMap } from "../../map/map";
+import { setNavTabView } from "../../layout/navTab/navTab";
 import type { RemoteScenario } from "../../../types/types";
 
 type Env = "land" | "sea";
@@ -76,7 +77,10 @@ export async function renderListScenario(
         const scenario = cache.find((s) => s.scenarioId === id);
         if (!scenario) return;
 
-        showScenarioOnMap(scenario);
+        setNavTabView("map");
+        window.requestAnimationFrame(() => {
+          showScenarioOnMap(scenario);
+        });
         return;
       }
 

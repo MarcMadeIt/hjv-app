@@ -1,11 +1,23 @@
 .table tbody tr th {
-    min-width: 300px;
-    width: auto;
+    width: 300px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
 }
+
+.table tbody tr td button {
+    padding: 6px 10px;
+    border-radius: 4px;
+
+}
+
+.table tbody tr td button:hover {
+    background-color: var(--color-tertiary-green);
+    color: aliceblue;
+    transition: all 0.4s ease;
+}
+
 
 .scenario-edit-body {
     display: flex;
@@ -50,11 +62,27 @@
 
 
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
+
+
     .table tbody tr th {
-        min-width: 180px;
-        width: 100%;
-        display: block;
+        padding: 20px 2px;
+        width: auto;
+        min-width: auto;
+    }
+
+    .table tbody tr td {
+        padding: 5px 2px;
+
+    }
+
+    .table tbody tr td button {
+        padding: 6px 10px;
+
+    }
+
+    .table.structured-list td {
+        padding: 20px 5px 5px 5px;
 
     }
 

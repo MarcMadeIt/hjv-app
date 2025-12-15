@@ -42,6 +42,7 @@ body {
 main {
   max-width: 1700px;
   margin: 0 auto;
+  height: 100%;
 }
 
 .button-primary {
@@ -59,7 +60,8 @@ main {
 
 #container {
   display: flex;
-  height: calc(100vh - 120px);
+  min-height: calc(85vh - 120px);
+  height: 100%;
 }
 
 #content {
@@ -78,21 +80,17 @@ main {
   align-items: flex-start;
   gap: 20px;
   width: 100%;
-  flex: 1 1 auto;
   min-width: 0;
+  padding: 0 !important;
 }
 
 #map-frame {
   flex: 4;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   main {
     padding-bottom: 120px;
-  }
-
-  #content {
-    flex: 0;
   }
 
   #container {
@@ -103,5 +101,16 @@ main {
   #content,
   #map-frame {
     width: 100%;
+    min-height: auto;
+  }
+
+  #content {
+    max-height: none;
+    overflow: visible;
+    padding: 15px;
+  }
+
+  #map-frame {
+    min-height: 320px;
   }
 }

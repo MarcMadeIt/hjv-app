@@ -1,4 +1,4 @@
-import { renderCreateScenario } from "../createScenario/createScenario";
+import { renderCreateScenario } from "./createScenario/createScenario";
 import {
   renderActionScenario,
   type ScenarioFilter,
@@ -46,21 +46,18 @@ export function renderContent(host: HTMLDivElement): void {
 
   function openScenarioView(
     setup: (container: HTMLDivElement, close: () => void) => void,
-    onExit?: () => void
+    onExit?: () => void,
+    options?: {
+      header?: (close: () => void) =>
+        | string
+        | {
+            html: string;
+            bind?: (root: HTMLElement, close: () => void) => void;
+          };
+    }
   ) {
     initialViewEl.style.display = "none";
     scenarioViewEl.style.display = "";
-
-    scenarioViewEl.innerHTML = `
-      <button class="button button-tertiary xs-full-width" id="back-btn">
-        <i class="icon icon-chevron-left"></i> Tilbage
-      </button>
-      <div id="scenario-content"></div>
-    `;
-
-    const scenarioContent =
-      scenarioViewEl.querySelector<HTMLDivElement>("#scenario-content");
-    if (!scenarioContent) return;
 
     let closed = false;
 
@@ -73,17 +70,61 @@ export function renderContent(host: HTMLDivElement): void {
       onExit?.();
     };
 
-    const backBtn =
-      scenarioViewEl.querySelector<HTMLButtonElement>("#back-btn");
-    backBtn?.addEventListener("click", close);
+    const headerContent = options?.header?.(close);
+    const headerHtml =
+      typeof headerContent === "string" ? headerContent : headerContent?.html;
+
+    scenarioViewEl.innerHTML = `
+      <div id="scenario-header">
+        ${
+          headerHtml ??
+          `<button class="button button-tertiary xs-full-width" id="back-btn">
+            <i class="icon icon-chevron-left"></i> Tilbage
+          </button>`
+        }
+      </div>
+      <div id="scenario-content"></div>
+    `;
+
+    const scenarioContent =
+      scenarioViewEl.querySelector<HTMLDivElement>("#scenario-content");
+    if (!scenarioContent) return;
+
+    if (headerContent && typeof headerContent !== "string") {
+      const headerEl =
+        scenarioViewEl.querySelector<HTMLElement>("#scenario-header");
+      headerContent.bind?.(headerEl ?? scenarioViewEl, close);
+    } else {
+      const backBtn =
+        scenarioViewEl.querySelector<HTMLButtonElement>("#back-btn");
+      backBtn?.addEventListener("click", close);
+    }
 
     setup(scenarioContent, close);
   }
 
   function openScenarioEditor(scenario: RemoteScenario) {
-    openScenarioView((container, close) => {
-      renderScenarioEditor(container, scenario, { onClose: close });
-    }, rerenderList);
+    openScenarioView(
+      (container, close) => {
+        renderScenarioEditor(container, scenario, { onClose: close });
+      },
+      rerenderList,
+      {
+        header: (close) => ({
+          html: `
+            <button class="button button-tertiary xs-full-width" id="scenario-edit-close">
+              Afslut redigering
+            </button>
+          `,
+          bind: (root) => {
+            const closeBtn = root.querySelector<HTMLButtonElement>(
+              "#scenario-edit-close"
+            );
+            closeBtn?.addEventListener("click", close);
+          },
+        }),
+      }
+    );
   }
 
   function rerenderList() {
