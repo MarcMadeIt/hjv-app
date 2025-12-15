@@ -2,7 +2,7 @@
 import "./map.css";
 import { importLibrary, setOptions } from "@googlemaps/js-api-loader";
 import mapStyles from "./mapStyles";
-import type { MissionTask } from "../../types/types";
+import type { MissionTask, RemoteScenario } from "../../types/types";
 
 let optionsInitialized = false;
 let mapInstance: google.maps.Map | null = null;
@@ -10,7 +10,6 @@ let MarkerClass: typeof google.maps.Marker | null = null;
 let markers: google.maps.Marker[] = [];
 let activeInfoWindow: google.maps.InfoWindow | null = null;
 let pickClickListener: google.maps.MapsEventListener | null = null;
-//callback hook
 let onTaskCoordsDraftChange:
   | ((taskId: number, lat: number, lng: number) => void)
   | null = null;
@@ -62,6 +61,11 @@ export async function renderMap(host: HTMLDivElement): Promise<void> {
 function clearMarkers() {
   markers.forEach((m) => m.setMap(null));
   markers = [];
+  if (activeInfoWindow) {
+    activeInfoWindow.close();
+    activeInfoWindow = null;
+  }
+  stopPickMode();
 }
 
 export function showTasksOnMap(tasks: MissionTask[]): void {
@@ -90,10 +94,10 @@ export function showTasksOnMap(tasks: MissionTask[]): void {
         labelOrigin: new google.maps.Point(12, 50),
       },
     });
-    //click handler
+
     marker.addListener("click", () => {
-    openTaskEditorInfoWindow(task, marker);
-   });
+      openTaskEditorInfoWindow(task, marker);
+    });
 
     markers.push(marker);
     bounds.extend(position);
@@ -105,7 +109,7 @@ export function showTasksOnMap(tasks: MissionTask[]): void {
 export function focusTaskOnMap(task: MissionTask): void {
   if (!mapInstance || !MarkerClass) return;
 
-/*  clearMarkers(); */
+  /*  clearMarkers(); */
 
   const position = { lat: task.Latitude, lng: task.Longitude };
   const marker = new MarkerClass({
@@ -122,15 +126,74 @@ export function focusTaskOnMap(task: MissionTask): void {
       url: "https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png",
       labelOrigin: new google.maps.Point(12, 50),
     },
-    });
+  });
   markers.push(marker);
 
   mapInstance.setCenter(position);
   mapInstance.setZoom(18);
 }
 
+export function showScenarioOnMap(scenario: RemoteScenario): void {
+  if (!mapInstance || !MarkerClass) return;
+
+  clearMarkers();
+
+  const tasks = scenario.tasks ?? [];
+  const markerMeta = scenario.map?.markers ?? [];
+  const fallbackCenter = scenario.map?.center ?? { lat: 55.6761, lng: 12.5683 };
+
+  const points = tasks.length
+    ? tasks.map((task, idx) => ({
+        lat: task.geo?.lat ?? markerMeta[idx]?.lat ?? fallbackCenter.lat,
+        lng: task.geo?.lng ?? markerMeta[idx]?.lng ?? fallbackCenter.lng,
+        title: task.title || `Punkt ${idx + 1}`,
+      }))
+    : markerMeta.map((m, idx) => ({
+        lat: m.lat,
+        lng: m.lng,
+        title: tasks[idx]?.title || `Punkt ${idx + 1}`,
+      }));
+
+  if (!points.length) return;
+
+  const bounds = new google.maps.LatLngBounds();
+
+  points.forEach((point) => {
+    const position = { lat: point.lat, lng: point.lng };
+
+    const marker = new MarkerClass!({
+      map: mapInstance!,
+      position,
+      title: point.title,
+      label: {
+        text: point.title,
+        fontSize: "12px",
+        fontWeight: "600",
+        color: "#262523",
+      },
+      icon: {
+        url: "https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png",
+        labelOrigin: new google.maps.Point(12, 50),
+      },
+    });
+
+    markers.push(marker);
+    bounds.extend(position);
+  });
+
+  if (points.length === 1) {
+    mapInstance.setCenter({ lat: points[0].lat, lng: points[0].lng });
+    mapInstance.setZoom(scenario.map?.zoom ?? 14);
+  } else {
+    mapInstance.fitBounds(bounds);
+  }
+}
+
 /*  interactive card */
-function openTaskEditorInfoWindow(task: MissionTask, marker: google.maps.Marker) {
+function openTaskEditorInfoWindow(
+  task: MissionTask,
+  marker: google.maps.Marker
+) {
   if (!mapInstance) return;
 
   // Close previous window + stop any active pick-mode
@@ -176,16 +239,13 @@ function openTaskEditorInfoWindow(task: MissionTask, marker: google.maps.Marker)
       return;
     }
 
-    onTaskCoordsDraftChange?.(task.ID, lat, lng); //store the change in taskDrafts
+    onTaskCoordsDraftChange?.(task.ID, lat, lng);
 
-    marker.setPosition({ lat, lng }); //change cursor?
-  
-    status.textContent = "Saved ✓"; //add button?
+    marker.setPosition({ lat, lng });
 
-    // updateTaskCoordinates(task.Id, lat, lng)
+    status.textContent = "Saved ✓";
   });
 
-  // Pick from map: toggle map click listener
   let picking = false;
 
   pickBtn.addEventListener("click", () => {
@@ -216,20 +276,18 @@ function openTaskEditorInfoWindow(task: MissionTask, marker: google.maps.Marker)
   info.open({ map: mapInstance, anchor: marker });
 }
 
-//pick-mode helpers//
-
 function startPickMode(onPick: (lat: number, lng: number) => void) {
   if (!mapInstance) return;
 
-  stopPickMode(); // ensure only one listener at a time
+  stopPickMode();
 
-    pickClickListener = mapInstance.addListener(
-      "click",
-      (e: google.maps.MapMouseEvent) => {
-        if (!e.latLng) return;
-        onPick(e.latLng.lat(), e.latLng.lng());
-      }
-    );
+  pickClickListener = mapInstance.addListener(
+    "click",
+    (e: google.maps.MapMouseEvent) => {
+      if (!e.latLng) return;
+      onPick(e.latLng.lat(), e.latLng.lng());
+    }
+  );
 }
 
 function stopPickMode() {

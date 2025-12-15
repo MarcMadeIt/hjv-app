@@ -1,10 +1,13 @@
 import "./createScenario.css";
 import type { MissionTask, ScenarioType } from "../../types/types";
 import { fetchTasks } from "./helpers/fetchTasks";
-import { focusTaskOnMap, showTasksOnMap, setOnTaskCoordsDraftChange } from "../map/map";
+import {
+  focusTaskOnMap,
+  showTasksOnMap,
+  setOnTaskCoordsDraftChange,
+} from "../map/map";
 import { renderChooseTasks } from "./chooseTasks/chooseTasks";
 import saveScenarioToJsonBin from "./helpers/saveScenario";
-
 
 let tasksCache: MissionTask[] | null = null;
 
@@ -37,15 +40,11 @@ export function renderCreateScenario(
   const selectedTaskIdsByType = new Map<ScenarioType, Set<number>>();
   let currentType: ScenarioType | null = null;
 
-//coordinate changes will be stored as task drafts and only persisted when saving scenario - original task data remains unchanges
-    // coordinate changes coming from the map
   setOnTaskCoordsDraftChange((taskId, lat, lng) => {
     if (!currentType) return;
 
-    // 1 - existing draft first
     const fromDraft = taskDrafts.get(taskId);
 
-    // 2 - or fall back to original task
     let baseTask: MissionTask | undefined = fromDraft;
 
     if (!baseTask && tasksCache) {
@@ -54,7 +53,6 @@ export function renderCreateScenario(
 
     if (!baseTask) return;
 
-    // 3 - stor3 draft override
     const updated: MissionTask = {
       ...baseTask,
       Latitude: lat,
@@ -64,14 +62,10 @@ export function renderCreateScenario(
     taskDrafts.set(taskId, updated);
   });
 
-
   host.innerHTML = `
     <form id="scenario-form" action="">
       <div id="scenario-shell" class="content-view">
-        <div class="scenario-form-group">
-          <label class="form-label" for="scenario-name">Titel på Scenarie</label>
-          <input type="text" id="scenario-name" name="scenario-name" class="form-input" required>
-        </div>
+    
 
         <div class="scenario-form-group">
           <fieldset aria-labelledby="scenario-type-legend">
@@ -91,6 +85,10 @@ export function renderCreateScenario(
 
         <div id="choose-tasks-container"></div>
         <div id="tasks-list"></div>
+            <div class="scenario-form-group">
+          <label class="form-label" for="scenario-name">Titel på Scenarie</label>
+          <input type="text" id="scenario-name" name="scenario-name" class="form-input" required>
+        </div>
         <div class="scenario-form-group">
           <label class="form-label" for="scenario-desc">Beskrivelse</label>
           <textarea class="form-input" id="scenario-desc" name="scenario-desc" rows="5" required></textarea>

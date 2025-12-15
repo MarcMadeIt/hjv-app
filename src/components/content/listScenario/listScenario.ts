@@ -1,17 +1,13 @@
 import deleteScenario from "./helpers/deleteScenario";
 import fetchAllScenarios from "./helpers/fetchAllScenarios";
 import "./listScenario.css";
+import { showScenarioOnMap } from "../../map/map";
+import type { RemoteScenario } from "../../../types/types";
 
 type Env = "land" | "sea";
 export type ScenarioFilter = "all" | Env;
 
-type Scenario = {
-  scenarioId: string;
-  title?: string;
-  description?: string;
-  type: Env;
-  createdAt?: string;
-};
+type Scenario = RemoteScenario;
 
 function escapeHtml(s: string) {
   return s
@@ -39,12 +35,17 @@ function matches(s: Scenario, query: string, filter: ScenarioFilter) {
 }
 
 type ListState = { query: string; filter: ScenarioFilter };
+type ListOptions = Partial<ListState> & {
+  onEdit?: (scenario: Scenario) => void;
+};
+const LIST_CACHE = Symbol("listScenarioCache");
 const LIST_STATE = Symbol("listScenarioState");
 const LIST_BOUND = Symbol("listScenarioBound");
+const LIST_ON_EDIT = Symbol("listScenarioOnEdit");
 
 export async function renderListScenario(
   host: HTMLDivElement,
-  opts?: Partial<ListState>
+  opts?: ListOptions
 ): Promise<void> {
   const prev: ListState = (host as any)[LIST_STATE] ?? {
     query: "",
@@ -55,6 +56,7 @@ export async function renderListScenario(
     filter: opts?.filter ?? prev.filter,
   };
   (host as any)[LIST_STATE] = state;
+  (host as any)[LIST_ON_EDIT] = opts?.onEdit;
 
   if (!(host as any)[LIST_BOUND]) {
     (host as any)[LIST_BOUND] = true;
@@ -70,12 +72,25 @@ export async function renderListScenario(
       if (!action || !id) return;
 
       if (action === "view") {
-        console.log("View scenario:", id);
+        const cache: Scenario[] = (host as any)[LIST_CACHE] ?? [];
+        const scenario = cache.find((s) => s.scenarioId === id);
+        if (!scenario) return;
+
+        showScenarioOnMap(scenario);
         return;
       }
 
       if (action === "edit") {
-        console.log("Edit scenario:", id);
+        const cache: Scenario[] = (host as any)[LIST_CACHE] ?? [];
+        const scenario = cache.find((s) => s.scenarioId === id);
+        if (!scenario) return;
+
+        const onEdit = (host as any)[LIST_ON_EDIT] as
+          | ListOptions["onEdit"]
+          | undefined;
+        if (onEdit) {
+          onEdit(scenario);
+        }
         return;
       }
 
@@ -93,7 +108,10 @@ export async function renderListScenario(
             query: "",
             filter: "all",
           };
-          await renderListScenario(host, st);
+          const onEdit = (host as any)[LIST_ON_EDIT] as
+            | ListOptions["onEdit"]
+            | undefined;
+          await renderListScenario(host, { ...st, onEdit });
         } catch (err) {
           console.error(err);
           alert("Kunne ikke slette scenariet.");
@@ -107,7 +125,14 @@ export async function renderListScenario(
     <div class="table--responsive-scroll" tabindex="3">
       <table class="table structured-list">
         <tbody>
-          <tr><td>Indlæser…</td></tr>
+          <tr>
+            <td>
+              <div class="align-text-center">
+                <div class="spinner"></div>
+                <div class="spinner-status" role="status">Henter indhold ...</div>
+              </div>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -117,7 +142,8 @@ export async function renderListScenario(
   if (!tbody) return;
 
   try {
-    const scenarios = (await fetchAllScenarios()) as Scenario[];
+    const scenarios = await fetchAllScenarios();
+    (host as any)[LIST_CACHE] = scenarios;
 
     const visible = scenarios.filter((s) =>
       matches(s, state.query, state.filter)

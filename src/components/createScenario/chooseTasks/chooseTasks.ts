@@ -162,7 +162,7 @@ export function renderChooseTasks(
 
     const count = selectionCountByType.get(currentType) ?? 0;
     if (!count) {
-      summaryEl.textContent = "Ingen opgaver valgt";
+      summaryEl.textContent = "";
       summaryEl.classList.add("no-selected");
     } else {
       summaryEl.textContent =
