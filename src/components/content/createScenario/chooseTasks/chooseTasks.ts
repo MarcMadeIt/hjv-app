@@ -1,6 +1,6 @@
 import type { MissionTask } from "../../../../types/types";
 
-type ScenarioType = MissionTask["Type"];
+type ScenarioType = MissionTask["type"];
 
 interface ChooseTasksOptions {
   requestTasks: (type: ScenarioType) => Promise<MissionTask[]>;
@@ -225,11 +225,11 @@ export function renderChooseTasks(
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.className = "form-checkbox";
-      const checkboxId = `choose-tasks-row-${task.ID}`;
+      const checkboxId = `choose-tasks-row-${task.id}`;
       checkbox.id = checkboxId;
       checkbox.name = "choose-tasks-row[]";
-      checkbox.value = String(task.ID);
-      checkbox.checked = currentSelection.has(task.ID);
+      checkbox.value = String(task.id);
+      checkbox.checked = currentSelection.has(task.id);
       checkbox.dataset.index = String(index);
       selectGroup.appendChild(checkbox);
 
@@ -242,21 +242,21 @@ export function renderChooseTasks(
       row.appendChild(selectCell);
 
       const titleCell = document.createElement("td");
-      titleCell.textContent = task.Title;
+      titleCell.textContent = task.title;
       row.appendChild(titleCell);
 
       const descCell = document.createElement("td");
-      descCell.textContent = task.Description || "-";
+      descCell.textContent = task.description || "-";
       row.appendChild(descCell);
 
       const difficultyCell = document.createElement("td");
-      difficultyCell.textContent = task.Difficulty || "-";
+      difficultyCell.textContent = task.difficulty || "-";
       row.appendChild(difficultyCell);
 
       const locationCell = document.createElement("td");
-      locationCell.textContent = `${task.Latitude.toFixed(
+      locationCell.textContent = `${task.latitude.toFixed(
         3
-      )}, ${task.Longitude.toFixed(3)}`;
+      )}, ${task.longitude.toFixed(3)}`;
       row.appendChild(locationCell);
 
       tableBody.appendChild(row);
@@ -265,9 +265,9 @@ export function renderChooseTasks(
 
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
-          currentSelection.add(task.ID);
+          currentSelection.add(task.id);
         } else {
-          currentSelection.delete(task.ID);
+          currentSelection.delete(task.id);
         }
         updateModalCount();
         updateCheckAllState();
@@ -284,7 +284,7 @@ export function renderChooseTasks(
       return;
     }
     currentTasks = await options.requestTasks(currentType);
-    currentTasks.sort((a, b) => a.Title.localeCompare(b.Title));
+    currentTasks.sort((a, b) => a.title.localeCompare(b.title));
     renderRows();
   }
 
@@ -313,7 +313,7 @@ export function renderChooseTasks(
     }
 
     if (checkAll.checked) {
-      currentSelection = new Set(currentTasks.map((task) => task.ID));
+      currentSelection = new Set(currentTasks.map((task) => task.id));
     } else {
       currentSelection.clear();
     }

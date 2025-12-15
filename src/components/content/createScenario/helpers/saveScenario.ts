@@ -22,8 +22,8 @@ function slugify(s: string) {
 
 function avgCenter(tasks: MissionTask[]) {
   const n = tasks.length || 1;
-  const lat = tasks.reduce((a, t) => a + t.Latitude, 0) / n;
-  const lng = tasks.reduce((a, t) => a + t.Longitude, 0) / n;
+  const lat = tasks.reduce((a, t) => a + t.latitude, 0) / n;
+  const lng = tasks.reduce((a, t) => a + t.longitude, 0) / n;
   return { lat, lng };
 }
 
@@ -55,23 +55,23 @@ export default async function saveScenarioToJsonBin(
       zoom: 13,
       markers: tasks.map((t, i) => ({
         markerId: `m${i + 1}`,
-        taskId: t.ID,
-        lat: t.Latitude,
-        lng: t.Longitude,
-        radius: t.Radius,
+        taskId: t.id,
+        lat: t.latitude,
+        lng: t.longitude,
+        radius: t.radius,
         environment: env,
       })),
     },
     tasks: tasks.map((t) => ({
-      taskId: t.ID,
-      title: t.Title,
-      description: t.Description,
+      taskId: t.id,
+      title: t.title,
+      description: t.description,
       environment: env,
-      locationName: t.Location,
-      difficulty: t.Difficulty,
-      activationCondition: t.ActivationCondition,
-      options: t.Options,
-      geo: { lat: t.Latitude, lng: t.Longitude, radius: t.Radius },
+      locationName: t.location,
+      difficulty: t.difficulty,
+      activationCondition: t.activationCondition,
+      options: t.options,
+      geo: { lat: t.latitude, lng: t.longitude, radius: t.radius },
     })),
   };
 

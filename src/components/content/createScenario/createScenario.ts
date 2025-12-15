@@ -48,15 +48,15 @@ export function renderCreateScenario(
     let baseTask: MissionTask | undefined = fromDraft;
 
     if (!baseTask && tasksCache) {
-      baseTask = tasksCache.find((t) => t.ID === taskId);
+      baseTask = tasksCache.find((t) => t.id === taskId);
     }
 
     if (!baseTask) return;
 
     const updated: MissionTask = {
       ...baseTask,
-      Latitude: lat,
-      Longitude: lng,
+      latitude: lat,
+      longitude: lng,
     };
 
     taskDrafts.set(taskId, updated);
@@ -166,14 +166,14 @@ export function renderCreateScenario(
     const all = await loadTasks();
     const deleted = getDeletedSet(type);
 
-    const base = all.filter((t) => t.Type === type && !deleted.has(t.ID));
+    const base = all.filter((t) => t.type === type && !deleted.has(t.id));
     const draftsForType = Array.from(taskDrafts.values()).filter(
-      (t) => t.Type === type
+      (t) => t.type === type
     );
 
     const byId = new Map<number, MissionTask>();
-    base.forEach((t) => byId.set(t.ID, { ...t }));
-    draftsForType.forEach((t) => byId.set(t.ID, { ...t }));
+    base.forEach((t) => byId.set(t.id, { ...t }));
+    draftsForType.forEach((t) => byId.set(t.id, { ...t }));
 
     return byId;
   }
@@ -252,9 +252,9 @@ export function renderCreateScenario(
         <strong
           type="button"
           class="badge badge-success badge-task"
-          data-id="${t.ID}"
+          data-id="${t.id}"
         ><i class="icon icon-check" aria-hidden="true"></i>
-          ${t.Title}
+          ${t.title}
         </strong>
       `
       )
@@ -285,7 +285,7 @@ export function renderCreateScenario(
       if (!badge) return;
 
       const id = Number(badge.dataset.id);
-      const task = currentTasks.find((t) => t.ID === id);
+      const task = currentTasks.find((t) => t.id === id);
       if (!task) return;
 
       /* scenarioShell.style.display = "none";*/
@@ -395,16 +395,18 @@ export function renderCreateScenario(
     radio.addEventListener("change", (e) => {
       const value = (e.target as HTMLInputElement).value as ScenarioType;
 
+      // keep existing name/description
       scenarioDraft = {
+        ...scenarioDraft,
         type: value,
-        name: "",
-        description: "",
       };
       currentType = value;
 
-      scenarioNameInput.value = "";
-      scenarioDescInput.value = "";
+      // ❌ remove these lines
+      // scenarioNameInput.value = "";
+      // scenarioDescInput.value = "";
 
+      // if you still want to reset tasks per type, keep that part
       taskDrafts.clear();
       const deletedSet = getDeletedSet(value);
       deletedSet.clear();

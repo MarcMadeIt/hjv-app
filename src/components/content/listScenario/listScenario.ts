@@ -4,6 +4,7 @@ import "./listScenario.css";
 import { showScenarioOnMap } from "../../map/map";
 import { setNavTabView } from "../../layout/navTab/navTab";
 import type { RemoteScenario } from "../../../types/types";
+import confirmWithModal from "./helpers/deleteModal";
 
 type Env = "land" | "sea";
 export type ScenarioFilter = "all" | Env;
@@ -99,7 +100,8 @@ export async function renderListScenario(
       }
 
       if (action === "delete") {
-        const ok = window.confirm(
+        const ok = await confirmWithModal(
+          host,
           "Er du sikker på, at du vil slette scenariet?"
         );
         if (!ok) return;

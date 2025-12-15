@@ -1,17 +1,17 @@
 export interface MissionTask {
-  ID: number;
-  Title: string;
-  Description: string;
-  Type: ScenarioType;
-  Location: string;
-  Radius: number;
-  Options: string[];
-  ActivationCondition: string;
-  Activate: boolean;
-  Completed: boolean;
-  Difficulty: "Let" | "Øvet" | "Svær";
-  Latitude: number;
-  Longitude: number;
+  id: number;
+  title: string;
+  description: string;
+  type: ScenarioType;
+  location: string;
+  radius: number;
+  options: string[];
+  activationCondition: string;
+  activated: boolean;
+  completed: boolean;
+  difficulty: "Let" | "Øvet" | "Svær";
+  latitude: number;
+  longitude: number;
 }
 
 export type ScenarioType = "Land" | "Sø";

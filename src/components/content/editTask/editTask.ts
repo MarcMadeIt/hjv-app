@@ -23,7 +23,7 @@ export function renderEditTask(
           name="task-name"
           class="form-input"
           required
-          value="${draft.Title}"
+          value="${draft.title}"
         >
       </div>
 
@@ -35,7 +35,7 @@ export function renderEditTask(
           name="task-lat"
           class="form-input"
           step="0.0001"
-          value="${draft.Latitude}"
+          value="${draft.latitude}"
         >
       </div>
 
@@ -47,7 +47,7 @@ export function renderEditTask(
           name="task-lon"
           class="form-input"
           step="0.0001"
-          value="${draft.Longitude}"
+          value="${draft.longitude}"
         >
       </div>
 
@@ -59,7 +59,7 @@ export function renderEditTask(
           name="task-desc"
           rows="5"
           required
-        >${draft.Description}</textarea>
+        >${draft.description}</textarea>
       </div>
 
       <div class="task-form-group">
@@ -81,26 +81,26 @@ export function renderEditTask(
   const notify = () => callbacks.onChange({ ...draft });
 
   nameInput.addEventListener("input", () => {
-    draft.Title = nameInput.value;
+    draft.title = nameInput.value;
     notify();
   });
 
   latInput.addEventListener("input", () => {
-    draft.Latitude = parseFloat(latInput.value);
+    draft.latitude = parseFloat(latInput.value);
     notify();
   });
 
   lonInput.addEventListener("input", () => {
-    draft.Longitude = parseFloat(lonInput.value);
+    draft.longitude = parseFloat(lonInput.value);
     notify();
   });
 
   descInput.addEventListener("input", () => {
-    draft.Description = descInput.value;
+    draft.description = descInput.value;
     notify();
   });
 
   deleteBtn.addEventListener("click", () => {
-    callbacks.onDelete(draft.ID);
+    callbacks.onDelete(draft.id);
   });
 }

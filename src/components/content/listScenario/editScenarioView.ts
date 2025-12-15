@@ -13,7 +13,7 @@ type ScenarioEditorCallbacks = {
 
 type TaskLookup = Map<number, MissionTask>;
 
-type Difficulty = MissionTask["Difficulty"];
+type Difficulty = MissionTask["difficulty"];
 
 const allowedDifficulties: Difficulty[] = ["Let", "Øvet", "Svær"];
 
@@ -47,19 +47,19 @@ function convertTasks(scenario: RemoteScenario): TaskLookup {
     };
 
     lookup.set(id, {
-      ID: id,
-      Title: task.title ?? `Opgave ${index + 1}`,
-      Description: task.description ?? "",
-      Type: taskType,
-      Location: task.locationName ?? "",
-      Radius: Number.isFinite(geo.radius) ? geo.radius : 50,
-      Options: Array.isArray(task.options) ? [...task.options] : [],
-      ActivationCondition: task.activationCondition ?? "",
-      Activate: false,
-      Completed: false,
-      Difficulty: toDifficulty(task.difficulty),
-      Latitude: geo.lat,
-      Longitude: geo.lng,
+      id: id,
+      title: task.title ?? `Opgave ${index + 1}`,
+      description: task.description ?? "",
+      type: taskType,
+      location: task.locationName ?? "",
+      radius: Number.isFinite(geo.radius) ? geo.radius : 50,
+      options: Array.isArray(task.options) ? [...task.options] : [],
+      activationCondition: task.activationCondition ?? "",
+      activated: false,
+      completed: false,
+      difficulty: toDifficulty(task.difficulty),
+      latitude: geo.lat,
+      longitude: geo.lng,
     });
   });
 
@@ -84,12 +84,12 @@ function renderTaskList(
         <button
           type="button"
           class="py-2 scenario-task-badge${
-            selectedId === task.ID ? " is-active" : ""
+            selectedId === task.id ? " is-active" : ""
           }"
-          data-id="${task.ID}"
+          data-id="${task.id}"
         >
             <i class="icon icon-edit" aria-hidden="true"></i>
-          ${task.Title}
+          ${task.title}
   
         </button>
       `
@@ -155,7 +155,7 @@ export function renderScenarioEditor(
       : null;
     const activeId = activeElement?.id ?? null;
 
-    activeTaskId = task.ID;
+    activeTaskId = task.id;
     renderTaskList(listHost, tasks, activeTaskId);
 
     renderEditTask(
@@ -163,7 +163,7 @@ export function renderScenarioEditor(
       { ...task },
       {
         onChange: (updated) => {
-          tasks.set(updated.ID, { ...updated });
+          tasks.set(updated.id, { ...updated });
           renderTaskList(listHost, tasks, activeTaskId);
           detailHost.scrollIntoView({ behavior: "smooth", block: "start" });
           refreshMap(tasks);
@@ -203,7 +203,7 @@ export function renderScenarioEditor(
     const current = tasks.get(taskId);
     if (!current) return;
 
-    const updated: MissionTask = { ...current, Latitude: lat, Longitude: lng };
+    const updated: MissionTask = { ...current, latitude: lat, longitude: lng };
     tasks.set(taskId, updated);
 
     refreshMap(tasks);

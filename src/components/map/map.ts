@@ -78,13 +78,13 @@ export function showTasksOnMap(tasks: MissionTask[]): void {
   const bounds = new google.maps.LatLngBounds();
 
   tasks.forEach((task) => {
-    const position = { lat: task.Latitude, lng: task.Longitude };
+    const position = { lat: task.latitude, lng: task.longitude };
     const marker = new MarkerClass!({
       map: mapInstance!,
       position,
-      title: task.Title,
+      title: task.title,
       label: {
-        text: task.Title,
+        text: task.title,
         fontSize: "12px",
         fontWeight: "600",
         color: "#262523",
@@ -111,13 +111,13 @@ export function focusTaskOnMap(task: MissionTask): void {
 
   /*  clearMarkers(); */
 
-  const position = { lat: task.Latitude, lng: task.Longitude };
+  const position = { lat: task.latitude, lng: task.longitude };
   const marker = new MarkerClass({
     map: mapInstance,
     position,
-    title: task.Title,
+    title: task.title,
     label: {
-      text: task.Title,
+      text: task.title,
       fontSize: "12px",
       fontWeight: "600",
       color: "#262523",
@@ -204,16 +204,16 @@ function openTaskEditorInfoWindow(
   container.className = "task-card";
 
   container.innerHTML = `
-    <h3 class="task-card__title">${task.Title}</h3>
+    <h3 class="task-card__title">${task.title}</h3>
 
     <div class="task-card__row">
       <label>Lat</label>
-      <input class="lat" type="number" step="0.000001" value="${task.Latitude}">
+      <input class="lat" type="number" step="0.000001" value="${task.latitude}">
     </div>
 
     <div class="task-card__row">
       <label>Lng</label>
-      <input class="lng" type="number" step="0.000001" value="${task.Longitude}">
+      <input class="lng" type="number" step="0.000001" value="${task.longitude}">
     </div>
 
     <div class="task-card__actions">
@@ -239,7 +239,7 @@ function openTaskEditorInfoWindow(
       return;
     }
 
-    onTaskCoordsDraftChange?.(task.ID, lat, lng);
+    onTaskCoordsDraftChange?.(task.id, lat, lng);
 
     marker.setPosition({ lat, lng });
 

@@ -2,7 +2,7 @@ import type { MissionTask } from "../../../../types/types";
 
 export async function fetchTasks(): Promise<MissionTask[]> {
   try {
-    const res = await fetch("/mock-team1.json");
+    const res = await fetch("https://gruppe2-opgaver.onrender.com/export");
 
     return await res.json();
   } catch {
