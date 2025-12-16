@@ -63,9 +63,14 @@ export function renderEditTask(
       </div>
 
       <div class="task-form-group">
-        <button type="button" class="button button-secondary" id="delete-task">
-          Slet opgave
-        </button>
+        <div class="task-actions">
+          <button type="button" class="button button-primary" id="save-task">
+            Gem ændringer
+          </button>
+          <button type="button" class="button button-secondary" id="delete-task">
+            Slet opgave
+          </button>
+        </div>
       </div>
     </div>
   `;
@@ -74,30 +79,33 @@ export function renderEditTask(
   const latInput = host.querySelector<HTMLInputElement>("#task-lat");
   const lonInput = host.querySelector<HTMLInputElement>("#task-lon");
   const descInput = host.querySelector<HTMLTextAreaElement>("#task-desc");
+  const saveBtn = host.querySelector<HTMLButtonElement>("#save-task");
   const deleteBtn = host.querySelector<HTMLButtonElement>("#delete-task");
 
-  if (!nameInput || !latInput || !lonInput || !descInput || !deleteBtn) return;
+  if (!nameInput || !latInput || !lonInput || !descInput || !saveBtn || !deleteBtn) return;
 
-  const notify = () => callbacks.onChange({ ...draft });
+ // const notify = () => callbacks.onChange({ ...draft });
 
   nameInput.addEventListener("input", () => {
     draft.title = nameInput.value;
-    notify();
   });
 
   latInput.addEventListener("input", () => {
     draft.latitude = parseFloat(latInput.value);
-    notify();
   });
 
   lonInput.addEventListener("input", () => {
     draft.longitude = parseFloat(lonInput.value);
-    notify();
   });
 
   descInput.addEventListener("input", () => {
     draft.description = descInput.value;
-    notify();
+  });
+
+  saveBtn.addEventListener("click", () => {
+    if (!draft.title.trim()) return;
+
+    callbacks.onChange({ ...draft });
   });
 
   deleteBtn.addEventListener("click", () => {

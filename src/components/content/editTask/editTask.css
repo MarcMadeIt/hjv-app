@@ -7,12 +7,21 @@
   flex: 1 0 0;
 }
 
+#task-detail-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 379px; 
+}
+
 /* Opgaver - rolldown (select / region)   */
 .task-form-group {
   display: flex;
-  width: 379px;
   flex-direction: column;
   align-items: flex-start;
+  gap: 5px;
+  width: 100%;   
 }
 
 .form-label {
@@ -66,3 +75,9 @@
   align-items: flex-start;
   gap: 12px;
 }
+
+.task-actions {
+  display: flex;
+  gap: 12px;
+}
+
