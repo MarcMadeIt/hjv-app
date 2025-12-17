@@ -1,88 +1,87 @@
 .table tbody tr th {
-  width: 300px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
 
 .table tbody tr td button {
-  padding: 6px 10px;
-  border-radius: 4px;
+    padding: 6px 10px;
+    border-radius: 4px;
 }
 
 .table tbody tr td button:hover {
-  background-color: var(--color-tertiary-green);
-  color: aliceblue;
-  transition: all 0.4s ease;
+    background-color: var(--color-tertiary-green);
+    color: aliceblue;
+    transition: all 0.4s ease;
 }
 
 .scenario-edit-body {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .scenario-edit-header-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
 }
 
 .scenario-edit-tasks {
-  flex: 1 1 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+    flex: 1 1 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .scenario-edit-detail {
-  flex: 2 1 320px;
+    flex: 2 1 320px;
 }
 
 .scenario-task-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
 }
 
 .scenario-task-badge.is-active {
-  border-color: var(--color-tertiary-green);
-  box-shadow: var(--shadow-focus);
+    border-color: var(--color-tertiary-green);
+    box-shadow: var(--shadow-focus);
 }
 
 .scenario-task-badge:is(:hover, :focus-visible) {
-  border-color: var(--color-tertiary-green);
+    border-color: var(--color-tertiary-green);
 }
 
 @media (max-width: 1200px) {
-  .table tbody tr th {
-    padding: 20px 2px;
-    width: auto;
-    min-width: auto;
-  }
+    .table tbody tr th {
+        padding: 20px 2px;
+        width: auto;
+        min-width: auto;
+    }
 
-  .table tbody tr td {
-    padding: 5px 2px;
-  }
+    .table tbody tr td {
+        padding: 5px 2px;
+    }
 
-  .table tbody tr td button {
-    padding: 6px 10px;
-  }
+    .table tbody tr td button {
+        padding: 6px 10px;
+    }
 
-  .table.structured-list td {
-    padding: 20px 5px 5px 5px;
-  }
+    .table.structured-list td {
+        padding: 20px 5px 5px 5px;
+    }
 
-  .scenario-edit-body {
-    flex-direction: column;
-  }
+    .scenario-edit-body {
+        flex-direction: column;
+    }
 }
 
 #scenario-delete-modal {
-  background: rgba(0, 0, 0, 0.55);
-  margin: 0;
+    background: rgba(0, 0, 0, 0.55);
+    margin: 0;
 }

@@ -44,7 +44,6 @@ export function renderChooseTasks(
 									<th scope="col">Navn</th>
 									<th scope="col">Beskrivelse</th>
 									<th scope="col">Sværhedsgrad</th>
-                  <th scope="col">Sted</th>
 									<th scope="col">Koordinater</th>
 								</tr>
 							</thead>
@@ -146,7 +145,7 @@ export function renderChooseTasks(
   };
 
   const modal = requireElement(
-    host.querySelector<HTMLDialogElement>("#choose-tasks-modal"),
+    host.querySelector<HTMLDivElement>("#choose-tasks-modal"),
     "Choose tasks modal element is missing"
   );
   const openBtn = requireElement(
@@ -185,40 +184,28 @@ export function renderChooseTasks(
   let currentType: ScenarioType | null = null;
   let currentSelection = new Set<number>();
   let currentTasks: MissionTask[] = [];
+  const closeBtn = requireElement(
+    host.querySelector<HTMLButtonElement>("#choose-tasks-close"),
+    "Choose tasks close button is missing"
+  );
   const selectionCountByType = new Map<ScenarioType, number>();
 
-  const isDialogSupported = typeof modal.showModal === "function";
-
   function isModalOpen(): boolean {
-    if (isDialogSupported) {
-      return modal.open;
-    }
-    return modal.getAttribute("data-open") === "true";
+    return modal.getAttribute("aria-hidden") === "false";
   }
 
   function openModal() {
-    if (!currentType) {
-      return;
-    }
-    if (isDialogSupported) {
-      if (!modal.open) {
-        modal.showModal();
-      }
-    } else {
-      modal.setAttribute("data-open", "true");
-      modal.style.display = "block";
-    }
+    if (!currentType || isModalOpen()) return;
+
+    modal.setAttribute("aria-hidden", "false");
+    modal.classList.add("is-visible");
   }
 
   function closeModal() {
-    if (isDialogSupported) {
-      if (modal.open) {
-        modal.close();
-      }
-    } else {
-      modal.removeAttribute("data-open");
-      modal.style.display = "none";
-    }
+    if (!isModalOpen()) return;
+
+    modal.setAttribute("aria-hidden", "true");
+    modal.classList.remove("is-visible");
   }
 
   function updateSummaryText() {
@@ -386,9 +373,7 @@ export function renderChooseTasks(
         updateCheckAllState();
         openModal();
       })
-      .catch(() => {
-        // Leave modal closed on failure and keep selection untouched
-      });
+      .catch(() => {});
   });
 
   checkAll.addEventListener("change", () => {
@@ -431,13 +416,15 @@ export function renderChooseTasks(
     closeModal();
   });
 
-  if (!isDialogSupported) {
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-  }
+  closeBtn.addEventListener("click", () => {
+    closeModal();
+  });
+
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
 
   return {
     setScenarioType(type, selected) {

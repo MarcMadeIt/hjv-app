@@ -1,0 +1,11 @@
+#choose-tasks-modal {
+    border: 0;
+}
+
+#choose-tasks-modal[aria-hidden="true"] {
+    display: none;
+}
+
+#choose-tasks-modal.is-visible {
+    display: flex;
+}
