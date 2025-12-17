@@ -64,6 +64,7 @@ export function renderChooseTasks(
                     <th scope="col">Navn</th>
                     <th scope="col">Beskrivelse</th>
                     <th scope="col">Sværhedsgrad</th>
+                    <th scope="col">Adresse</th>
                     <th scope="col">Koordinater</th>
                   </tr>
                 </thead>
