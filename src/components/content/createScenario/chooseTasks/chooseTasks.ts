@@ -135,7 +135,6 @@ export function renderChooseTasks(
     const res = await fetch(url, {
       signal,
       headers: {
-        // Nominatim prefers a descriptive UA; browser may ignore, but harmless.
         Accept: "application/json",
       },
     });

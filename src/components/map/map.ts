@@ -229,7 +229,6 @@ function openTaskEditorInfoWindow(
   const pickBtn = container.querySelector<HTMLButtonElement>("button.pick")!;
   const status = container.querySelector<HTMLSpanElement>("span.status")!;
 
-  // Save: update marker + task and local callback
   saveBtn.addEventListener("click", () => {
     const lat = Number(latInput.value);
     const lng = Number(lngInput.value);

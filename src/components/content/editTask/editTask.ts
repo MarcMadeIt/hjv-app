@@ -82,9 +82,15 @@ export function renderEditTask(
   const saveBtn = host.querySelector<HTMLButtonElement>("#save-task");
   const deleteBtn = host.querySelector<HTMLButtonElement>("#delete-task");
 
-  if (!nameInput || !latInput || !lonInput || !descInput || !saveBtn || !deleteBtn) return;
-
- // const notify = () => callbacks.onChange({ ...draft });
+  if (
+    !nameInput ||
+    !latInput ||
+    !lonInput ||
+    !descInput ||
+    !saveBtn ||
+    !deleteBtn
+  )
+    return;
 
   nameInput.addEventListener("input", () => {
     draft.title = nameInput.value;

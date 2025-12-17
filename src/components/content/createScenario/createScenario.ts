@@ -14,6 +14,20 @@ let tasksCache: MissionTask[] | null = null;
 async function loadTasks(): Promise<MissionTask[]> {
   if (!tasksCache) {
     const res = await fetchTasks();
+    tasksCache = res;
+  }
+  return tasksCache;
+}
+
+type ScenarioDraft = {
+  type: ScenarioType | null;
+  name: string;
+  description: string;
+};
+
+export function renderCreateScenario(
+  host: HTMLDivElement,
+  onSaved?: () => void
 ): void {
   let scenarioDraft: ScenarioDraft = {
     type: null,
@@ -24,11 +38,103 @@ async function loadTasks(): Promise<MissionTask[]> {
   const taskDrafts = new Map<number, MissionTask>();
   const deletedTaskIdsByType = new Map<ScenarioType, Set<number>>();
   const selectedTaskIdsByType = new Map<ScenarioType, Set<number>>();
+  let currentType: ScenarioType | null = null;
 
   setOnTaskCoordsDraftChange((taskId, lat, lng) => {
     if (!currentType) return;
+
+    const fromDraft = taskDrafts.get(taskId);
+    let baseTask: MissionTask | undefined = fromDraft;
+
+    if (!baseTask && tasksCache) {
+      baseTask = tasksCache.find((t) => t.id === taskId);
+    }
+
+    if (!baseTask) return;
+
+    const updated: MissionTask = {
+      ...baseTask,
+      latitude: lat,
+      longitude: lng,
+    };
+
+    taskDrafts.set(taskId, updated);
+  });
+
+  host.innerHTML = `
+    <form id="scenario-form" action="">
+      <div id="scenario-shell" class="content-view">
+        <div class="scenario-form-group">
+          <fieldset aria-labelledby="scenario-type-legend">
+            <legend class="form-label" id="scenario-type-legend">Vælg type</legend>
+            <div id="radio-options">
+              <div class="form-group-radio">
+                <input type="radio" id="scenario-type-land" name="scenario-type" class="form-radio" value="Land">
+                <label class="form-label" for="scenario-type-land">Land</label>
+              </div>
+              <div class="form-group-radio">
+                <input type="radio" id="scenario-type-sea" name="scenario-type" class="form-radio" value="Sø">
+                <label class="form-label" for="scenario-type-sea">Sø</label>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+
+        <div id="choose-tasks-container"></div>
+        <div id="tasks-list"></div>
+        <div class="scenario-form-group">
+          <label class="form-label" for="scenario-name">Titel på Scenarie</label>
+          <input type="text" id="scenario-name" name="scenario-name" class="form-input" required>
+        </div>
+        <div class="scenario-form-group">
+          <label class="form-label" for="scenario-desc">Beskrivelse</label>
+          <textarea class="form-input" id="scenario-desc" name="scenario-desc" rows="5" required></textarea>
+        </div>
+        <div class="mt-7">
+          <button type="button" class="button button-primary" id="save-scenario-btn">
+            Gem scenarie
+          </button>
+        </div>
+      </div>
+      <div id="task-detail-view" class="content-view" style="display:none;"></div>
     </form>
   `;
+
+  const radios = host.querySelectorAll<HTMLInputElement>(
+    'input[name="scenario-type"]'
+  );
+  const scenarioShell = host.querySelector<HTMLDivElement>("#scenario-shell");
+  const taskDetailView =
+    host.querySelector<HTMLDivElement>("#task-detail-view");
+  const tasksList = host.querySelector<HTMLDivElement>("#tasks-list");
+  const scenarioNameInput =
+    host.querySelector<HTMLInputElement>("#scenario-name");
+  const scenarioDescInput =
+    host.querySelector<HTMLTextAreaElement>("#scenario-desc");
+  const chooseTasksContainer = host.querySelector<HTMLDivElement>(
+    "#choose-tasks-container"
+  );
+  const saveScenarioBtn =
+    host.querySelector<HTMLButtonElement>("#save-scenario-btn");
+
+  if (
+    !tasksList ||
+    !taskDetailView ||
+    !scenarioShell ||
+    !scenarioNameInput ||
+    !scenarioDescInput ||
+    !chooseTasksContainer ||
+    !saveScenarioBtn
+  ) {
+    return;
+  }
+
+  scenarioNameInput.addEventListener("input", () => {
+    scenarioDraft.name = scenarioNameInput.value;
+  });
+
+  scenarioDescInput.addEventListener("input", () => {
+    scenarioDraft.description = scenarioDescInput.value;
   });
 
   function getDeletedSet(type: ScenarioType): Set<number> {
@@ -154,19 +260,6 @@ async function loadTasks(): Promise<MissionTask[]> {
     chooseTasks
       .refresh(type, new Set(getSelectedSet(type)))
       .catch(() => void 0);
-    /*
-    tasksList.onclick = (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest<HTMLButtonElement>(".task-btn");
-      if (!button) return;
-
-      const id = Number(button.dataset.id);
-      const task = currentTasks.find((t) => t.ID === id);
-      if (!task) return;
-
-      scenarioShell.style.display = "none";
-      taskDetailView.style.display = "";
-*/
 
     tasksList.onclick = (event) => {
       const target = event.target as HTMLElement;
@@ -176,109 +269,11 @@ async function loadTasks(): Promise<MissionTask[]> {
       const id = Number(badge.dataset.id);
       const task = currentTasks.find((t) => t.id === id);
       if (!task) return;
-
-      /* scenarioShell.style.display = "none";*/
       taskDetailView.style.display = "";
 
       focusTaskOnMap(task);
-
-      /*
-      taskDetailView.innerHTML = `
-        <button type="button" class="button button-tertiary mb-4" id="back-to-scenario">
-          Tilbage til scenarie
-        </button>
-        <div id="task-detail"></div>
-      `;
-
-
-      const backBtn =
-        taskDetailView.querySelector<HTMLButtonElement>("#back-to-scenario");
-      const detailHost =
-        taskDetailView.querySelector<HTMLDivElement>("#task-detail");
-      if (!backBtn || !detailHost) return;
-
-      renderEditTask(detailHost, task, {
-        onChange: (updated) => {
-          taskDrafts.set(updated.ID, updated);
-
-          const btn = tasksList.querySelector<HTMLButtonElement>(
-            `button[data-id="${updated.ID}"]`
-          );
-          if (btn) {
-            btn.textContent = updated.Title;
-          }
-
-          if (currentType === updated.Type) {
-            chooseTasks
-              .refresh(updated.Type, new Set(getSelectedSet(updated.Type)))
-              .catch(() => void 0);
-          }
-        },
-        onDelete: (taskId) => {
-          if (!currentType) return;
-          const deletedSet = getDeletedSet(currentType);
-          deletedSet.add(taskId);
-          taskDrafts.delete(taskId);
-
-          const selectedSet = getSelectedSet(currentType);
-          selectedSet.delete(taskId);
-
-          chooseTasks
-            .refresh(currentType, new Set(selectedSet))
-            .catch(() => void 0);
-
-          scenarioShell.style.display = "";
-          taskDetailView.style.display = "none";
-
-          renderTasks(currentType);
-        },
-      });
-
-      backBtn.addEventListener("click", () => {
-        scenarioShell.style.display = "";
-        taskDetailView.style.display = "none";
-        if (currentType) {
-          renderTasks(currentType);
-        }
-      }); */
     };
   }
-
-  /*addTaskBtn.addEventListener("click", async () => {
-    if (!currentType) return;
-
-    const newTask: MissionTask = {
-      ID: nextId++,
-      Title: "Ny opgave",
-      Description: "",
-      Type: currentType,
-      Location: "",
-      Radius: 50,
-      Options: [],
-      ActivationCondition: "Lokalitet",
-      Activate: false,
-      Completed: false,
-      Difficulty: "Let",
-      Latitude: 55.6,
-      Longitude: 8.3,
-    };
-
-    taskDrafts.set(newTask.ID, newTask);
-
-    const selectedSet = getSelectedSet(currentType);
-    selectedSet.add(newTask.ID);
-
-    chooseTasks.refresh(currentType, new Set(selectedSet)).catch(() => void 0);
-
-    await renderTasks(currentType);
-
-    const btn = tasksList.querySelector<HTMLButtonElement>(
-      `button[data-id="${newTask.ID}"]`
-    );
-    if (btn) {
-      btn.click();
-    }
-  });*/
 
   radios.forEach((radio) => {
     radio.addEventListener("change", (e) => {

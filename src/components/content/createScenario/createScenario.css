@@ -7,7 +7,6 @@
     flex: 1 0 0;
 }
 
-/* Opgaver - rolldown (select / region)   */
 .scenario-form-group {
     display: flex;
     width: 379px;
@@ -31,13 +30,9 @@
     color: var(--color-tertiary-black);
 }
 
-/* Name - input */
-
 .form-input {
     color: var(--color-text);
 }
-
-/* Types - radiobutton  */
 
 .form-radio {
     accent-color: var(--color-secondary);
