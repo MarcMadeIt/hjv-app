@@ -21,50 +21,69 @@ export function renderChooseTasks(
 ): ChooseTasksController {
   host.innerHTML = `
 		<div class="choose-tasks">
-			<button type="button" class="button button-secondary" id="choose-tasks-open" disabled>
-				Vælg opgaver
-			</button>
-			<p class="table-selected-number no-selected" id="choose-tasks-summary">${NO_TYPE_MESSAGE}</p>
-			<dialog id="choose-tasks-modal" class="choose-tasks-modal">
-				<form method="dialog" class="choose-tasks-modal-form">
-					<header class="choose-tasks-modal-header">
-						<h2 class="modal-title">Vælg opgaver</h2>
-						<p id="choose-tasks-type"></p>
-					</header>
-					<div class="table--responsive-scroll" tabindex="0">
-						<table class="table table--selectable" id="choose-tasks-table">
-							<thead>
-								<tr>
-									<th>
-										<div class="form-group-checkbox">
-											<input id="choose-tasks-check-all" type="checkbox" class="form-checkbox">
-											<label for="choose-tasks-check-all"><span class="sr-only">Vælg alle rækker</span></label>
-										</div>
-									</th>
-									<th scope="col">Navn</th>
-									<th scope="col">Beskrivelse</th>
-									<th scope="col">Sværhedsgrad</th>
-									<th scope="col">Koordinater</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-					<div class="table-actions">
-						<p class="table-selected-number no-selected" id="choose-tasks-count">Ingen rækker valgt</p>
-						<div class="button-group">
-							<button type="button" class="button button-primary" id="choose-tasks-apply">
-								<svg class="icon-svg" focusable="false" aria-hidden="true"><use href="#download"></use></svg>
-								Tilføj valgte
-							</button>
-							<button type="button" class="button button-secondary" id="choose-tasks-cancel">
-								<svg class="icon-svg" focusable="false" aria-hidden="true"><use href="#delete"></use></svg>
-								Annuller
-							</button>
-						</div>
-					</div>
-				</form>
-			</dialog>
+      <button
+        type="button"
+        class="button button-secondary"
+        id="choose-tasks-open"
+        disabled
+        data-module="modal"
+        data-target="choose-tasks-modal"
+        aria-haspopup="dialog"
+      >
+        Vælg opgaver
+      </button>
+      <p class="table-selected-number no-selected" id="choose-tasks-summary">${NO_TYPE_MESSAGE}</p>
+      <div
+        class="fds-modal choose-tasks-modal"
+        id="choose-tasks-modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="choose-tasks-heading"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-title" id="choose-tasks-heading">Vælg opgaver</h2>
+            <button class="modal-close function-link" id="choose-tasks-close">
+              <svg class="icon-svg" focusable="false" aria-hidden="true"><use href="#close"></use></svg>
+              Luk
+            </button>
+          </div>
+          <div class="modal-body">
+            <p id="choose-tasks-type"></p>
+            <div class="table--responsive-scroll" tabindex="0">
+              <table class="table table--selectable" id="choose-tasks-table">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="form-group-checkbox">
+                        <input id="choose-tasks-check-all" type="checkbox" class="form-checkbox">
+                        <label for="choose-tasks-check-all"><span class="sr-only">Vælg alle rækker</span></label>
+                      </div>
+                    </th>
+                    <th scope="col">Navn</th>
+                    <th scope="col">Beskrivelse</th>
+                    <th scope="col">Sværhedsgrad</th>
+                    <th scope="col">Koordinater</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="button-group">
+              <button type="button" class="button button-primary" id="choose-tasks-apply">
+                Tilføj valgte
+              </button>
+              <button type="button" class="button button-secondary" id="choose-tasks-cancel">
+                Annuller
+              </button>
+            </div>
+             <p class="table-selected-number no-selected" id="choose-tasks-count">Ingen rækker valgt</p>
+          </div>
+        </div>
+      </div>
 		</div>
 	`;
 
