@@ -43,6 +43,7 @@ export default async function saveScenarioToJsonBin(
   )}`;
   const center = avgCenter(tasks);
 
+  const sortedTasks = [...tasks].sort((a, b) => a.id - b.id);
   const newScenario = {
     scenarioId,
     title: scenarioDraft.name,
@@ -53,7 +54,7 @@ export default async function saveScenarioToJsonBin(
     map: {
       center,
       zoom: 13,
-      markers: tasks.map((t, i) => ({
+      markers: sortedTasks.map((t, i) => ({
         markerId: `m${i + 1}`,
         taskId: t.id,
         lat: t.latitude,
@@ -62,7 +63,7 @@ export default async function saveScenarioToJsonBin(
         environment: env,
       })),
     },
-    tasks: tasks.map((t) => ({
+    tasks: sortedTasks.map((t) => ({
       taskId: t.id,
       title: t.title,
       description: t.description,

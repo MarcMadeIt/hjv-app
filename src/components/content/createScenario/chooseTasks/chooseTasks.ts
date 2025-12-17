@@ -1,6 +1,7 @@
 import type { MissionTask } from "../../../../types/types";
 
 type ScenarioType = MissionTask["type"];
+let geocodeController: AbortController | null = null;
 
 interface ChooseTasksOptions {
   requestTasks: (type: ScenarioType) => Promise<MissionTask[]>;
@@ -43,6 +44,7 @@ export function renderChooseTasks(
 									<th scope="col">Navn</th>
 									<th scope="col">Beskrivelse</th>
 									<th scope="col">Sværhedsgrad</th>
+                  <th scope="col">Sted</th>
 									<th scope="col">Koordinater</th>
 								</tr>
 							</thead>
@@ -66,6 +68,72 @@ export function renderChooseTasks(
 			</dialog>
 		</div>
 	`;
+
+  type PlaceInfo = { label: string; raw?: any };
+
+  const placeCache = new Map<string, PlaceInfo>();
+
+  function cacheKey(lat: number, lon: number) {
+    return `${lat.toFixed(4)},${lon.toFixed(4)}`;
+  }
+
+  function pickPlaceLabel(data: any): string {
+    const a = data?.address ?? {};
+    return (
+      data?.name ||
+      a.attraction ||
+      a.building ||
+      a.amenity ||
+      a.tourism ||
+      a.shop ||
+      a.road ||
+      a.neighbourhood ||
+      a.suburb ||
+      a.village ||
+      a.town ||
+      a.city ||
+      a.municipality ||
+      a.county ||
+      a.state ||
+      data?.display_name ||
+      "Ukendt sted"
+    );
+  }
+
+  async function reverseGeocode(
+    lat: number,
+    lon: number,
+    signal?: AbortSignal
+  ) {
+    const key = cacheKey(lat, lon);
+    const cached = placeCache.get(key);
+    if (cached) return cached;
+
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
+      lat
+    )}&lon=${encodeURIComponent(lon)}&zoom=18&addressdetails=1`;
+
+    const res = await fetch(url, {
+      signal,
+      headers: {
+        // Nominatim prefers a descriptive UA; browser may ignore, but harmless.
+        Accept: "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      const fallback = { label: "Ukendt sted" };
+      placeCache.set(key, fallback);
+      return fallback;
+    }
+
+    const data = await res.json();
+    const label = pickPlaceLabel(data);
+
+    const info = { label, raw: data };
+    placeCache.set(key, info);
+    return info;
+  }
 
   const requireElement = <T extends Element>(
     element: T | null,
@@ -198,12 +266,18 @@ export function renderChooseTasks(
   }
 
   function renderRows() {
+    geocodeController?.abort();
+    geocodeController = new AbortController();
+    const signal = geocodeController.signal;
+    const sortedTasks = currentTasks?.slice().sort((a, b) => a.id - b.id);
+
     tableBody.innerHTML = "";
 
-    if (!currentTasks.length) {
+    if (!sortedTasks.length) {
       const emptyRow = document.createElement("tr");
       const cell = document.createElement("td");
       cell.colSpan = 5;
+      cell.colSpan = 6;
       cell.textContent = "Ingen opgaver tilgængelige";
       emptyRow.appendChild(cell);
       tableBody.appendChild(emptyRow);
@@ -215,7 +289,7 @@ export function renderChooseTasks(
 
     const checkboxIds: string[] = [];
 
-    currentTasks.forEach((task, index) => {
+    sortedTasks.forEach((task, index) => {
       const row = document.createElement("tr");
 
       const selectCell = document.createElement("td");
@@ -253,6 +327,10 @@ export function renderChooseTasks(
       difficultyCell.textContent = task.difficulty || "-";
       row.appendChild(difficultyCell);
 
+      const placeCell = document.createElement("td");
+      placeCell.textContent = "Slår op…";
+      row.appendChild(placeCell);
+
       const locationCell = document.createElement("td");
       locationCell.textContent = `${task.latitude.toFixed(
         3
@@ -260,6 +338,14 @@ export function renderChooseTasks(
       row.appendChild(locationCell);
 
       tableBody.appendChild(row);
+      reverseGeocode(task.latitude, task.longitude, signal)
+        .then((info) => {
+          // If row still exists (modal re-render can happen), update it
+          if (placeCell.isConnected) placeCell.textContent = info.label;
+        })
+        .catch(() => {
+          if (placeCell.isConnected) placeCell.textContent = "Ukendt sted";
+        });
 
       checkboxIds.push(checkboxId);
 
