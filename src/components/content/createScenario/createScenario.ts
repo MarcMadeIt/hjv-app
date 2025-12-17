@@ -426,6 +426,7 @@ export function renderCreateScenario(
     try {
       const tasks = await getCurrentTasks(currentType);
       await saveScenarioToJsonBin(currentType, scenarioDraft, tasks);
+      showTasksOnMap([]);
       onSaved?.();
     } catch (e) {
       console.error(e);
