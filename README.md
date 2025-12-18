@@ -54,8 +54,10 @@ Opret en fil kaldet **`.env`** i projektets rodmappe.
 
 Eksempel:
 ```env
-VITE_GOOGLE_MAPS_API_KEY=din_google_maps_api_key
-VITE_JSONBIN_API_KEY=din_jsonbin_api_key
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+VITE_JSONBIN_KEY=your_jsonbin_api_key
+VITE_JSONBIN_KEY_HEADER=X-Access-Key
+VITE_JSONBIN_ID=your_jsonbin_id
 ```
 
 **Vigtigt**
