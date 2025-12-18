@@ -1,7 +1,23 @@
-# Projekt – Vanilla Vite + TypeScript
+# Skoleprojekt Gamemaster (Scenariebygger - Team 2)
 
-Dette projekt er et skoleprojekt bygget med **Vanilla Vite** og **TypeScript**.  
-Applikationen bruger eksterne API’er, herunder **Google Maps** og **JSONBin**, som konfigureres via miljøvariabler.
+Dette projekt er **Gamemaster-modulet (Team 2)** i skoleprojektet  
+**“Scenarie- & øvelsesplatform til Hjemmeværnsskolen”**.
+
+Gamemaster-applikationen bruges af en øvelsesleder til at opbygge scenarier ved hjælp af
+kortbaseret placering af opgaver, som efterfølgende kan eksporteres og anvendes af deltagerdelen.
+
+---
+
+## Funktionalitet
+
+- Visning af opgaver i en liste
+- Interaktivt kort baseret på Google Maps
+- Placering af opgaver som:
+  - Punkter (markers)
+  - Zoner (radius/områder)
+- Valg af scenarietype (land / sø)
+- Eksport af færdigt scenarie som JSON
+- Simpel og overskuelig brugergrænseflade målrettet øvelsesledere
 
 ---
 
@@ -10,7 +26,8 @@ Applikationen bruger eksterne API’er, herunder **Google Maps** og **JSONBin**,
 - Vite (Vanilla)
 - TypeScript
 - HTML / CSS
-- JavaScript
+- Google Maps API
+- JSONBin
 - Git
 
 ---
@@ -24,8 +41,8 @@ Applikationen bruger eksterne API’er, herunder **Google Maps** og **JSONBin**,
 ├─ .env
 ├─ .gitignore
 ├─ index.html
-├─ package-lock.json
 ├─ package.json
+├─ package-lock.json
 └─ tsconfig.json
 ```
 
@@ -33,7 +50,9 @@ Applikationen bruger eksterne API’er, herunder **Google Maps** og **JSONBin**,
 
 ## Krav
 
-- **Node.js** (v18 eller nyere anbefales)
+Før projektet kan køres, skal følgende være installeret:
+
+- **Node.js** (version 18 eller nyere)
 - **npm**
 
 Tjek installation:
@@ -61,10 +80,12 @@ npm install
 
 ---
 
-### 3. Opret `.env` fil
+### 3. Miljøvariabler (.env)
 
-Opret en fil kaldet **`.env`** i rodmappen og indsæt følgende:
+Projektet bruger miljøvariabler til API-nøgler.  
+Opret en fil kaldet **`.env`** i projektets rodmappe.
 
+Eksempel:
 ```env
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 VITE_JSONBIN_KEY=your_jsonbin_api_key
@@ -73,31 +94,19 @@ VITE_JSONBIN_ID=your_jsonbin_id
 ```
 
 **Vigtigt**
-- Alle miljøvariabler i Vite skal starte med `VITE_`
+- Alle Vite environment variables skal starte med `VITE_`
 - `.env` må ikke pushes til GitHub (ligger i `.gitignore`)
 
 ---
 
-### 4. Start projektet
+### 4. Start udviklingsserveren
 ```bash
 npm run dev
 ```
 
-Projektet kører nu på:
+Applikationen kan herefter tilgås på:
 ```
 http://localhost:5173
-```
-
----
-
-## Brug af environment variables i TypeScript
-
-Eksempel:
-```ts
-const googleMapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-const jsonBinKey = import.meta.env.VITE_JSONBIN_KEY;
-const jsonBinHeader = import.meta.env.VITE_JSONBIN_KEY_HEADER;
-const jsonBinId = import.meta.env.VITE_JSONBIN_ID;
 ```
 
 ---
@@ -108,7 +117,7 @@ const jsonBinId = import.meta.env.VITE_JSONBIN_ID;
 npm run build
 ```
 
-Output genereres i:
+Det færdige build genereres i:
 ```txt
 /dist
 ```
@@ -118,13 +127,14 @@ Output genereres i:
 ## Noter
 
 - Projektet er udviklet til undervisningsbrug
-- Fokus på enkel struktur og læsbar kode
-- API-nøgler håndteres udelukkende via `.env`
+- Fokus er på enkelhed, overblik og brugervenlighed
+- Gamemaster kræver ingen teknisk erfaring for at kunne anvendes
 
 ---
 
-## Skoleprojekt
+## Skoleinformation
 
 - Uddannelse: Professionsbachelor i Webudvikling  
 - Semester: 1. semester  
-- Projekt: Scenarie- & øvelsesplatform
+- Team: **Team 2 – Gamemaster & Scenarier**  
+- Projekt: Scenarie- & øvelsesplatform til Hjemmeværnsskolen
