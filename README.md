@@ -1,7 +1,7 @@
 # Projekt – Vanilla Vite + TypeScript
 
-Dette projekt er en del af et skoleprojekt og er bygget med **Vanilla Vite** og **TypeScript**.  
-Applikationen anvender eksterne API’er, bl.a. **Google Maps** og **JSONBin**, som konfigureres via `.env`-filer.
+Dette projekt er et skoleprojekt bygget med **Vanilla Vite** og **TypeScript**.  
+Applikationen bruger eksterne API’er, herunder **Google Maps** og **JSONBin**, som konfigureres via miljøvariabler.
 
 ---
 
@@ -10,19 +10,33 @@ Applikationen anvender eksterne API’er, bl.a. **Google Maps** og **JSONBin**, 
 - Vite (Vanilla)
 - TypeScript
 - HTML / CSS
-- JavaScript (via TypeScript)
-- Git (versionsstyring)
+- JavaScript
+- Git
+
+---
+
+## Projektstruktur
+
+```txt
+├─ node_modules/
+├─ public/
+├─ src/
+├─ .env
+├─ .gitignore
+├─ index.html
+├─ package-lock.json
+├─ package.json
+└─ tsconfig.json
+```
 
 ---
 
 ## Krav
 
-Før du starter, skal du have installeret:
+- **Node.js** (v18 eller nyere anbefales)
+- **npm**
 
-- **Node.js** (version 18 eller nyere anbefales)
-- **npm** (følger med Node.js)
-
-Tjek versioner:
+Tjek installation:
 ```bash
 node -v
 npm -v
@@ -47,12 +61,10 @@ npm install
 
 ---
 
-### 3. Miljøvariabler (.env)
+### 3. Opret `.env` fil
 
-Projektet bruger miljøvariabler til API-nøgler.  
-Opret en fil kaldet **`.env`** i projektets rodmappe.
+Opret en fil kaldet **`.env`** i rodmappen og indsæt følgende:
 
-Eksempel:
 ```env
 VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 VITE_JSONBIN_KEY=your_jsonbin_api_key
@@ -61,34 +73,31 @@ VITE_JSONBIN_ID=your_jsonbin_id
 ```
 
 **Vigtigt**
-- Alle Vite environment variables skal starte med `VITE_`
+- Alle miljøvariabler i Vite skal starte med `VITE_`
 - `.env` må ikke pushes til GitHub (ligger i `.gitignore`)
 
 ---
 
-### 4. Start udviklingsserveren
+### 4. Start projektet
 ```bash
 npm run dev
 ```
 
-Projektet kan herefter åbnes i browseren på:
+Projektet kører nu på:
 ```
 http://localhost:5173
 ```
 
 ---
 
-## Projektstruktur (kort overblik)
+## Brug af environment variables i TypeScript
 
-```txt
-├─ src/
-│  ├─ main.ts
-│  ├─ style.css
-│  └─ ...
-├─ index.html
-├─ .env
-├─ package.json
-└─ vite.config.ts
+Eksempel:
+```ts
+const googleMapsKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const jsonBinKey = import.meta.env.VITE_JSONBIN_KEY;
+const jsonBinHeader = import.meta.env.VITE_JSONBIN_KEY_HEADER;
+const jsonBinId = import.meta.env.VITE_JSONBIN_ID;
 ```
 
 ---
@@ -99,7 +108,7 @@ http://localhost:5173
 npm run build
 ```
 
-Det færdige build findes i:
+Output genereres i:
 ```txt
 /dist
 ```
@@ -108,13 +117,13 @@ Det færdige build findes i:
 
 ## Noter
 
-- Projektet er lavet til undervisningsbrug
-- Fokus er på enkel struktur og forståelig kode
+- Projektet er udviklet til undervisningsbrug
+- Fokus på enkel struktur og læsbar kode
 - API-nøgler håndteres udelukkende via `.env`
 
 ---
 
-## Skoleinformation
+## Skoleprojekt
 
 - Uddannelse: Professionsbachelor i Webudvikling  
 - Semester: 1. semester  
