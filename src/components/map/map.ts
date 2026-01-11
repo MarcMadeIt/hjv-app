@@ -243,7 +243,7 @@ function openTaskEditorInfoWindow(
     marker.setPosition({ lat, lng });
 
     status.textContent =
-      "Gemt <i class='icon icon-checkmark' aria-hidden='true'></i>";
+      "Gemt <i class='icon icon-check' aria-hidden='true'></i>";
   });
 
   let picking = false;
