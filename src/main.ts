@@ -19,6 +19,7 @@ if (appRoot) {
     <div id="createScenario"></div>
     <div id="nav-tab"></div>
     <footer id="footer">
+    test
     </footer>
   </main>
 `;
